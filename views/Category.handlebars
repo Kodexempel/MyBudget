@@ -1,0 +1,30 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category</title>
+    <link rel="stylesheet" href="/css/styles-jl.css">
+</head>
+<div id="main">
+    <div>
+     {{> menu}}
+</div>
+<body>
+ <form action="/AddCategory" method="POST">
+        <label for="CategoryName">CategoryName</label>
+        <input type="text" id="CategoryName" name="CategoryName" required>
+        <label for="budget">Select Budget:</label>
+        <select id="budget" name="budgetId">
+            <option value="1">Monthly Expenses</option>
+            <option value="2">Groceries</option>
+            <option value="3">Entertainment</option>
+            
+        </select>
+
+        
+    
+
+        <br>
+        <button type="submit">Add Category </button>
+    </form>

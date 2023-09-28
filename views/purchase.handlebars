@@ -1,0 +1,72 @@
+{{!-- <div id="main">
+    <div>
+     {{> menu}}
+</div>
+<div class="MyPurchase">
+        <div>
+            <div class ="purchase-button">
+            <button id="Add-purchase">Add Purchase</button>
+            </div>
+        </div>
+    </div>
+     <div class="popup">
+        <div class="close-btn" id="close-purchase">&times;</div>
+        <div class="form">
+            <h2>Purchase</h2>
+            <div class="form-element">
+                <label for="Name">PurchaseName</label>
+                <input type="text" id="Name" placeholder="Enter Purchase Name">
+            </div>
+            <div class="form-element">
+                <label for="price">Price</label>
+                <input type="price" id="price" placeholder="Enter Price">
+            </div>
+            <div class="form-element">
+                <button>Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+     document.querySelector("#Add-purchase").addEventListener("click", function () {
+    const popup = document.querySelector(".popup");
+    if (popup.classList.contains("active")) {
+        popup.classList.remove("active");
+    } else {
+        popup.classList.add("active");
+    }
+});
+
+document.querySelector("#close-purchase").addEventListener("click", function () {
+    document.querySelector(".popup").classList.remove("active");
+});
+
+    </script> --}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/styles-jl.css">
+</head>
+<div id="main">
+    <div>
+     {{> menu}}
+</div>
+<body>
+    <h1>ADD Purchase</h1>
+    <form action="/AddPurchase" method="POST">
+        <label for="PurchaseName">PurchaseName</label>
+        <input type="text" id="PurchaseName" name="PurchaseName" required>
+        <br>
+       <label for="price">Price:</label>
+        <input type="price" id="price" name="price" required>
+
+        <br>
+        <button type="submit">Add</button>
+    </form>
+    
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "C:\\Users\\Omer\\source\\Dmp2year\\my app2023 web\\MyApp.db",
+            "name": "database"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
