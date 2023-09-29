@@ -1,4 +1,4 @@
- <div class="modal" id="addBudgetModal">
+ <!-- <div class="modal" id="addBudgetModal">
         <div class="modal-content">
             <span class="close" id="close-add-budget">&times;</span>
             <h2>Add Budget</h2>
@@ -16,8 +16,7 @@
 
     <script>
         // JavaScript to handle modal visibility
-        const loginModal = document.getElementById('loginModal');
-        const signupModal = document.getElementById('signupModal');
+      
         const addBudgetModal = document.getElementById('addBudgetModal');
 
         // Function to show modals
@@ -68,4 +67,4 @@
                 closeModal(addBudgetModal);
             }
         });
-    </script>
+    </script> -->

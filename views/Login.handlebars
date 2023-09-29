@@ -43,15 +43,15 @@
             <h2>Sign Up</h2>
             <form class="form-element" action="/signup" method="POST">
                 <label for="signup-email">Email</label>
-                <input type="text" id="signup-email" placeholder="Enter email">
+                <input type="text" id="signup-email" name="email" placeholder="Enter email">
             </div>
             <div class="form-element">
                 <label for="signup-password">Password</label>
-                <input type="password" id="signup-password" placeholder="Enter Password">
+                <input type="password" id="signup-password" name="password" placeholder="Enter Password">
             </div>
          
       <div class="form-element">
-        <button>Sign Up</button>
+        <button type="submit">Sign Up</button>
       </div>
       <p>Already have an account? <a href="/">Login</a></p>
            
@@ -59,66 +59,7 @@
         </div>
     </div>
     <script>  
-    document.querySelector("#show-login").addEventListener("click", function () {
-    const popup = document.querySelector(".popup");
-
-    document.querySelector("#show-signup").addEventListener("click", function () {
-    const popup = document.querySelector(".popup");
-
-    if (popup.classList.contains("active")) {
-        popup.classList.remove("active");
-    } else {
-        popup.classList.add("active");
-    }
-});
-
-document.querySelector("#close-login").addEventListener("click", function () {
-    document.querySelector(".popup").classList.remove("active");
-
-});
-document.querySelector("#close-signup").addEventListener("click", function () {
-    document.querySelector(".popup").classList.remove("active");
-});
-
-</script>
-</body>
-{{!--  
-    {{!--  
-     <div class="popup">
-        <div class="close-btn" id="close-signup">&times;</div>
-        <div class="form">
-            <h2>Sign Up</h2>
-            <div class="form-element">
-                <label for="signup-email">Email</label>
-                <input type="text" id="signup-email" placeholder="Enter email">
-            </div>
-            <div class="form-element">
-                <label for="signup-password">Password</label>
-                <input type="password" id="signup-password" placeholder="Enter Password">
-            </div>
-            <div class="form-element">
-                <button>Sign Up</button>
-            </div>
-        </div>
-    </div>
-{{!-- <script>
-     document.querySelector("#show-login").addEventListener("click", function () {
-    const popup = document.querySelector(".popup");
-    if (popup.classList.contains("active")) {
-        popup.classList.remove("active");
-    } else {
-        popup.classList.add("active");
-    }
-});
-
-document.querySelector("#close-login").addEventListener("click", function () {
-    document.querySelector(".popup").classList.remove("active");
-});
-
-    </script>
-</body> --}}
-<script>
-        const loginModal = document.querySelector(".popup");
+    const loginModal = document.querySelector(".popup");
         const signupModal = document.querySelectorAll(".popup")[1]; // Select the second popup
 
         document.querySelector("#show-login").addEventListener("click", function () {
@@ -144,57 +85,4 @@ document.querySelector("#close-login").addEventListener("click", function () {
                 signupModal.classList.remove("active");
             }
         });
-    </script>
-</body> --}}
-
-{{!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="/css/styles-jl.css">
-</head>
-<body style="background-color: #282C34;">
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="/SignUp">Sign up</a></p>
-</body>
-</html> --}}
-{{!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Add your meta tags, title, and CSS links here -->
-</head>
-<body style="background-color: #282C34;">
-    <h1>Login</h1>
-    <form id="loginForm" action="/login" method="POST">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="/SignUp">Sign up</a></p>
-
-    <!-- Include your JavaScript code to handle form submission -->
-    <script>
-        const loginForm = document.getElementById('loginForm');
-
-// Add an event listener for form submission
-loginForm.addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    </script>
-</body>
-</html> --}} --}}
+</script>

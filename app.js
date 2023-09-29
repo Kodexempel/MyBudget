@@ -4,6 +4,8 @@ const port = 1010;
 const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt'); 
+const saltRounds = 10; 
 app.use(bodyParser.urlencoded({ extended: true }));
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('My_database.db');
@@ -11,7 +13,7 @@ const db = new sqlite3.Database('My_database.db');
 app.use(session({
     secret: 'Omer-ammo',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
   }));
 
 
@@ -27,7 +29,7 @@ app.get('/', (request, response) => {
     response.render('Login.handlebars');
   });
   
-  app.post('/login', (req, res) => {
+ app.post('/login', (req, res) => {
     const { email, password } = req.body;
   
     db.get('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (err, user) => {
@@ -46,25 +48,39 @@ app.get('/', (request, response) => {
   
   app.post('/signup', (req, res) => {
     const { email, password } = req.body;
-
-    db.get('SELECT * FROM users WHERE email = ?', [email], (err, existingUser) => {
+   console.log("reREQ: "+JSON.stringify(req.body))
+   
+    bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+      console.error('hashing '+password);
         if (err) {
-            console.error(err.message);
-            res.status(500).send('An error occurred.');
-        } else if (existingUser) {
-            res.render('login', { error: 'Email already exists. Please log in.' });
-        } else {
-            db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, password], (err) => {
-                if (err) {
-                    console.error(err.message);
-                    res.status(500).send('An error occurred while signing up.'); 
-                } else {
-                    res.redirect('/Budget');
-                }
-            });
+            console.error('Error hashing password:', err.message);
+            res.status(500).send('An error occurred while signing up.');
+            return;
         }
+
+        db.get('SELECT * FROM users WHERE email = ?', [email], (err, existingUser) => {
+            if (err) {
+                console.error('Error checking for existing user:', err.message);
+                res.status(500).send('An error occurred.');
+            } else if (existingUser) {
+                console.log('User with this email already exists:', email);
+                res.render('login', { error: 'Email already exists. Please log in.' });
+            } else {
+                
+                db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, hashedPassword], (err) => {
+                    if (err) {
+                        console.error('Error inserting new user:', err.message);
+                        res.status(500).send('An error occurred while signing up.');
+                    } else {
+                        console.log('User signed up successfully:', email);
+                        res.redirect('/Budget');
+                    }
+                });
+            }
+        });
     });
 });
+
 
 
 
@@ -82,7 +98,7 @@ app.get('/Budget', (request, response) => {
         console.error(err.message);
         response.status(500).send('An error occurred.');
       } else {
-        response.render('Budget.handlebars', { budgets: rows });
+        response.render('Budget.handlebars', { budgets: rows, userId });
       }
     });
   });
@@ -112,36 +128,72 @@ app.get('/Budget', (request, response) => {
       }
     });
   });
-  
-  
-  app.delete('/Budget/:id', (req, res) => {
+ 
+  app.post('/Budget/:id/delete', (req, res) => {
+    console.log("ROUTE DELETE...")
     const budgetId = req.params.id;
 
-    db.run('DELETE FROM budget WHERE id = ?', budgetId, (err) => {
+    db.run('DELETE FROM budget WHERE id=?', budgetId, (err) => {
         if (err) {
             console.error(err.message);
             res.status(500).send('An error occurred.');
         } else {
-            res.redirect('/Budget'); 
-        }
-    });
-});
-
-app.put('/Budget/:id', (req, res) => {
-    const budgetId = req.params.id;
-    const { editedBudgetName, editedAmount } = req.body;
-
-    db.run('UPDATE budget SET budgetName = ?, amount = ? WHERE id = ?', [editedBudgetName, editedAmount, budgetId], (err) => {
-        if (err) {
-            console.error(err.message);
-            res.status(500).send('An error occurred.');
-        } else {
+            console.log('Deleted budget with ID:', budgetId); 
             res.redirect('/Budget');
         }
     });
 });
 
   
+//   app.delete('/deleteBudget/:id', (req, res) => {
+//     const budgetId = req.params.id;
+//     console.log('Delete request received for budgetId:', budgetId); 
+
+//     db.run('DELETE FROM budget WHERE id = ?', budgetId, (err) => {
+//         if (err) {
+//             console.error(err.message);
+//             res.status(500).send('An error occurred.');
+//         } else {
+//             res.redirect('/Budget');
+//         }
+//     });
+// });
+
+
+// app.put('/Budget/:id', (req, res) => {
+//   const budgetId = req.params.budgetId;
+//   const editedBudgetName = req.body.editedBudgetName;
+//   const editedAmount = req.body.editedAmount;
+
+//   db.run('UPDATE budget SET budgetName = ?, amount = ? WHERE id = ?', [editedBudgetName, editedAmount, budgetId], (err) => {
+//       if (err) {
+//           console.error(err.message);
+//           res.status(500).json({ error: 'Server error' });
+//       } else {
+//           res.status(200).json({ message: 'Budget updated' });
+//       }
+//   });
+// });
+
+app.post('/editBudget/:id', (req, res) => {
+  console.log("Budget update")
+  const budgetId = req.params.id;
+  const editedBudgetName = req.body.editedBudgetName;
+  const editedAmount = req.body.editedAmount;
+
+  db.run('UPDATE budget SET budgetName = ?, amount = ? WHERE id = ?', [editedBudgetName, editedAmount, budgetId], (err) => {
+      if (err) {
+          console.error(err.message);
+          res.status(500).send('An error occurred.');
+      } else {
+          res.redirect('/Budget');
+      }
+  });
+});
+
+
+
+
   
 app.use((req, res) => {
   res.status(404).render('404.handlebars');

@@ -1,54 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget</title>
-    <link rel="stylesheet" href="/css/styles-jl.css">
-</head>
-<body>
-    <div id="main">
-        {{> menu}}
+<div id="main">
+    {{> menu}}
 
-        {{#each budgets}}
-            <div class="budget-item">
-                <p>Budget Name: {{budgetName}}</p>
-                <p>Amount: {{amount}}</p>
-                <button class="edit-btn">Edit</button>
-                <form class="delete-form" action="/Budget/{{id}}?_method=DELETE" method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit">Delete</button>
-                </form>
-                <form class="edit-form" action="/Budget/{{id}}" method="POST">
-                    <input type="hidden" name="_method" value="PUT"> 
-                    <input type="text" name="editedBudgetName" placeholder="New Budget Name" required>
-                    <input type="number" name="editedAmount" placeholder="New Amount" required>
-                    <button type="submit">Save</button>
-                </form>
+    {{#each budgets}}
+        <div class="budget-item">
+            <p>Budget Name: {{budgetName}}</p>
+            <p>Amount: {{amount}}</p>
+            <button class="edit-btn" id="editBudgetButton{{id}}">Edit</button>
+
+         
+            <div class="popup" id="editBudgetModal{{id}}">
+                <div class="close-btn" id="closeEditBudgetModal{{id}}">&times;</div>
+                <div class="form">
+                    <h2>Edit Budget</h2>
+                    <form class="form-element" action="/editBudget/{{id}}" method="POST">
+                        <label for="editedBudgetName">New Budget Name</label>
+                        <input type="text" id="editedBudgetName" name="editedBudgetName" placeholder="Enter new budget name" required>
+                        <br>
+                        <label for="editedAmount">New Amount</label>
+                        <input type="number" id="editedAmount" name="editedAmount" placeholder="Enter new amount" required>
+                        <br>
+                        <button type="submit">Save</button>
+                    </form>
+                </div>
             </div>
-        {{/each}}
 
-        <form action="/AddBudget" method="POST">
-            <label for="budgetName">Budget Name</label>
-            <input type="text" id="budgetName" name="budgetName" required>
-            <br>
-            <label for="amount">Amount:</label>
-            <input type="number" id="amount" name="amount" required>
-            <br>
-            <button type="submit">Add Budget</button>
-        </form>
+            <form action="/Budget/{{id}}" method="POST">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" onclick="return confirm('Are you sure you want to delete this budget?')">Delete</button>
+
+                
+            </form>
+        <div>
+            <form action="/Budget/{{id}}/delete" method="POST"><input type="submit" value="DELETE"></form>
+        </div>
+    {{/each}} 
+
+   <button id="addBudgetButton" class="add-budget-button">Add Budget</button>
+
+
+    <div class="popup" id="addBudgetModal">
+        <div class="close-btn" id="closeAddBudgetModal">&times;</div>
+        <div class="form">
+            <h2>Add Budget</h2>
+            <form class="form-element" action="/AddBudget" method="POST">
+                <label for="budgetName">Budget Name</label>
+                <input type="text" id="budgetName" name="budgetName" placeholder="Enter budget name" required>
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" name="amount" placeholder="Enter amount" required>
+                <br>
+                <button type="submit">Add Budget</button>
+            </form>
+        </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const editButtons = document.querySelectorAll('.edit-btn');
-            editButtons.forEach((button) => {
-                button.addEventListener('click', () => {
-                    const editForm = button.nextElementSibling;
-                    editForm.classList.toggle('active');
-                });
+    </div> 
+</div>
+<script>
+   
+    document.addEventListener('DOMContentLoaded', () => {
+        const editButtons = document.querySelectorAll('.edit-btn');
+        editButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const budgetId = button.parentElement.querySelector('.popup').id;
+                const editModal = document.getElementById(budgetId);
+                editModal.classList.toggle('active');
             });
         });
-    </script>
-</body>
-</html>
+
+        const addBudgetButton = document.getElementById('addBudgetButton');
+        addBudgetButton.addEventListener('click', () => {
+            const addBudgetModal = document.getElementById('addBudgetModal');
+            addBudgetModal.classList.toggle('active');
+        });
+
+        const closeButtons = document.querySelectorAll('.close-btn');
+        closeButtons.forEach((closeButton) => {
+            closeButton.addEventListener('click', () => {
+                closeButton.parentElement.classList.remove('active');
+            });
+        });
+    });
+</script>
+

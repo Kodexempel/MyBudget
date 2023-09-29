@@ -12,7 +12,10 @@
     margin-bottom: 96px;
     margin-top: 32px;
     box-sizing: content-box;
+    
     /*border: 3px solid gray;*/
+    /* justify-content: space-between;  */
+   
 }
 
 h2{
@@ -167,8 +170,8 @@ p{
             padding: 10px;
             outline: none;
             border: 1px solid #aaa;
-            border-radius: 5px;
-        }
+            border-radius: 5px; 
+         }
    .whyuusinfo {
     width: 400px; 
     background-color: #959595;
@@ -213,6 +216,7 @@ h2{
 p{
     font-size : 22px;
 }
+
 /*  
 .purchase-button {
     background-color: #2A9D8F;
@@ -228,36 +232,37 @@ p{
     text-align: center;
 } 
  */
- /* Modal Styles */
-/* .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+ Styles for budget items
+.budget-item {
+    background-color: #2A9D8F;
+    border: 6px solid #2A9D8F;
+    
+    border-radius: 5px 5px;
+    height: 200px;
+    margin-right: 60%;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-.modal-content {
-    background-color: white;
-    width: 300px;
-    margin: 100px auto;
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
-    position: relative;
+/* 
+.budget-item p {
+    margin: 0;
+    font-size: 25px;
+    color: #333;
 }
-
-/* Close button (X) */
-/* .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
+/* 
+/* Style for the Edit and Delete buttons 
+.edit-btn,
+button[type="submit"] {
+    background-color: #2A9D8F;
+    color: #333;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 3px;
     cursor: pointer;
+    margin-top: 5px;
+}
+
+.edit-btn:hover,
+button[type="submit"]:hover {
+    background-color: #2A9D8F;
 } */ 
-.error {
-    color: red; /* You can customize the styling */
-    font-weight: bold;
-  }
