@@ -4,19 +4,39 @@
     font-family: sans-serif;
     box-sizing: border-box;
 }
-
+a{
+    color: #ABB2BF;
+    text-decoration: none;
+}
 
 #main {
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
     margin-bottom: 96px;
     margin-top: 32px;
     box-sizing: content-box;
+    color: #ABB2BF;
     
     /*border: 3px solid gray;*/
     /* justify-content: space-between;  */
    
 }
+
+
+
+#menu {
+     font-family: Arial, Helvetica, sans-serif; 
+   
+    padding: 20px;
+    font-size: 50px;
+    
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-left: 20%;
+    word-spacing: 30px;
+   
+}
+
 
 h2{
     font-size: 28px;
@@ -27,40 +47,7 @@ p{
 }
 
 
-#menu {
-    font-family: Arial, Helvetica, sans-serif;
-    color: #ABB2BF;
-    padding: 10px;
-    font-size: 50px;
-    
-    margin-top: 20px;
-    margin-right: 20px;
-    margin-left: 35%;
-    word-spacing: 30px;
-    top: 0;
-    right: 0; /* Adjust the 'right' property to control the horizontal position */
-}
-
-.nav {
-    display: block;
-    padding: 0;
-}
-
-.nav a {
-    text-decoration: none;
-    color: #12e819;
-    margin-right: 30px; /* Adjust the 'margin-right' property as needed */
-    margin-left: 0;
-    border-right: 5px solid #04245e; /* Add a border to separate links */
-    padding-right: 10px; /* Add some padding to space the links and the border */
-}
-.nav a:last-child {
-    margin-right: 0;
-    border-right: none;
-}
-
-
-.balance {
+/* .balance {
         position: fixed;
         top: 40px;
         left: 10px; 
@@ -81,13 +68,13 @@ p{
             padding: 10px 20px;
             font-size: 15px;
             font-weight: 600;
-            color: #fff; /* Text color */
-            background: #1BA098; /* Background color */
+            color: #fff;
+            background: #1BA098;
             border: none;
             outline: none;
             cursor: pointer;
             border-radius: 5px;
-        }
+        } */
     /* /* My login Css */
         .center {
             position: absolute;
@@ -174,7 +161,8 @@ p{
          }
    .whyuusinfo {
     width: 400px; 
-    background-color: #959595;
+    
+    /* background-color: #959595; */
     text-align: center; 
     margin: 0 auto;
     padding: 40px; 
@@ -184,12 +172,12 @@ p{
     color: #e0e6f3;
   }
    html, body {
-    height: 100%;
+    /* height: 100%; */
     margin: 0;
     padding: 0;
    } */
  body {
-    
+     
      display: flex; 
      align-items: center;
     justify-content: center;
@@ -232,14 +220,14 @@ p{
     text-align: center;
 } 
  */
- Styles for budget items
+ /* Styles for budget items */
 .budget-item {
-    background-color: #2A9D8F;
-    border: 6px solid #2A9D8F;
     
+    border: 6px solid #2A9D8F;
+   
     border-radius: 5px 5px;
-    height: 200px;
-    margin-right: 60%;
+    /* height: 200px; */
+    /* margin-right: 60%; */
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 /* 
@@ -266,3 +254,211 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #2A9D8F;
 } */ 
+/* My budget container */
+/* CSS for your container */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+   
+    padding: 30px; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+}
+
+
+.leftcontainer {
+    flex: 5;
+    
+    padding: 10px; 
+    border: 1px solid #ccc;
+    border-radius: 5px; 
+}
+
+
+.rightcontainer {
+    flex: 2;
+    
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+}
+
+
+
+
+.logout-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: #ff6347;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer; 
+    transition: background-color 0.3s;
+}
+
+
+.logout-button:hover {
+    background-color: #d9534f;
+}
+
+
+.logout-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #137d68; 
+}
+
+.logout-link img {
+    width: 40px; 
+    margin-top :100%;
+    margin-right: 0;
+}
+
+.myhome-welcome{
+    margin-left: 35%;
+    font-size: 30px;
+    margin-top: -30px;
+    color: #DEB992;
+    text-shadow: #1BA098;
+
+
+}
+.profile-container {
+    text-align: center;
+    position: relative;
+}
+
+img#open-user-modal {
+    width: 100px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+/* My home page */
+.modal {
+    display: none;
+    position: absolute;
+    background-color: #ABB2BF;
+    border: 1px solid #ccc;
+    padding: 30px;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 380px;
+    box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+}
+
+.modal.active {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+.modal .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    background: #888;
+    color: #eee;
+    text-align: center;
+    line-height: 15px;
+    cursor: pointer;
+}
+
+.modal .form h2 {
+    text-align: center;
+    color: #222;
+    margin: 10px 0px 20px;
+    font-size: 25px;
+}
+
+.modal .form-element {
+    margin: 15px 0px;
+}
+
+.modal .form .form-element label {
+    font-size: 14px;
+    color: #222;
+}
+
+.modal .form .form-element input[type="text"],
+.modal .form .form-element input[type="password"] {
+    margin-top: 5px;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    outline: none;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+
+.modal .form .form-element button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background-color: #2A9D8F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.modal .form .form-element button:hover {
+    background-color: #137d68;
+}
+/* My footer */
+.center-footer {
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    color: #ABB2BF;
+    padding: 10px 0;
+}
+
+
+.Contact1 {
+   text-align: left;
+   font-size: 12px;
+   
+}
+
+.contact-info, .address-footer {
+   
+    text-align: left;
+}
+
+.contact-info p, .address-footer p {
+    margin: 0;
+    padding: 5px;
+    font-size: 12px;
+}
+#success-message {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: none;
+    width: 100%;
+}
+
+#success-text {
+    margin: 0;
+}

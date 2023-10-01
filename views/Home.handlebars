@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category</title>
+    <link rel="stylesheet" href="/css/styles-jl.css">
+</head>
+<body>
+    <div id="main">
+        {{> menu}}
+    </div>
+    <div class="myhome-welcome">
+        <h1> Welcome, {{user.userName}}!</h1>
+        <a href="/changePassword">Change Password</a>
+    </div>
+    <div class="profile-container">
+        <img id="open-user-modal" src="/img/user profile.png" alt="Your Profile Picture">
+        <div class="modal" id="user-modal">
+            <div class="modal-content">
+                {{#if user}}
+                    <h1>User: {{user.userName}}!</h1>
+                    <p>Your email: {{user.email}}</p>
+                    <a href="logout">
+                        <span class="logout-link">
+                            <img src="/img/icons8-logout-50.png" alt="Logout">
+                        </span>
+                    </a>
+                {{else}}
+                    <p>No user data available.</p>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+   <script>
+        const openUserModalButton = document.getElementById('open-user-modal');
+        const userModal = document.getElementById('user-modal');
+        const closeUserModalButton = document.getElementById('close-user-modal');
+        let isUserModalOpen = false;
+
+        openUserModalButton.addEventListener('click', () => {
+            if (!isUserModalOpen) {
+                userModal.style.display = 'block';
+                isUserModalOpen = true;
+            } else {
+                userModal.style.display = 'none';
+                isUserModalOpen = false;
+            }
+        });
+
+        closeUserModalButton.addEventListener('click', () => {
+            userModal.style.display = 'none';
+            isUserModalOpen = false;
+        });
+    </script>
+</body>
+</html>

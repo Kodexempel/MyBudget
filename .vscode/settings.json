@@ -7,5 +7,6 @@
             "name": "database"
         }
     ],
-    "sqltools.useNodeRuntime": true
+    "sqltools.useNodeRuntime": true,
+    "npm-scripts.showStartNotification": false
 }

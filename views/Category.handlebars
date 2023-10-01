@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,25 +6,83 @@
     <title>Category</title>
     <link rel="stylesheet" href="/css/styles-jl.css">
 </head>
-<div id="main">
-    <div>
-     {{> menu}}
-</div>
 <body>
- <form action="/AddCategory" method="POST">
-        <label for="CategoryName">CategoryName</label>
-        <input type="text" id="CategoryName" name="CategoryName" required>
-        <label for="budget">Select Budget:</label>
-        <select id="budget" name="budgetId">
-            <option value="1">Monthly Expenses</option>
-            <option value="2">Groceries</option>
-            <option value="3">Entertainment</option>
-            
-        </select>
+    <div id="main">
+        {{> menu}}
+        <div class="container">
+            <div class="leftcontainer">
+                <h1>Your categories</h1>
+                <div class="category-list">
+                    {{#each categories}}
+                    <div class="category-item">
+                        <span>{{categoryName}}</span>
+                        <button class="edit-btn" id="editCategoryButton{{id}}">Edit</button>
+                        <div class="popup" id="editCategoryModal{{id}}">
+                            <div class="close-btn" id="closeEditCategoryModal{{id}}">&times;</div>
+                            <div class="form">
+                                <h2>Edit Category</h2>
+                                <form class="form-element" action="/editCategory/{{id}}" method="POST">
+                                    <label for="editedCategoryName">New Category Name</label>
+                                    <input type="text" id="editedCategoryName" name="editedCategoryName" placeholder="Enter new category name" required>
+                                    <br>
+                                    <button type="submit">Save</button>
+                                </form>
+                            </div>
+                        </div>
+                        <form action="/Category/{{id}}" method="POST">
+                            <input type="hidden" name="_method" value="DELETE">
+                        </form>
+                        <div>
+                            <form action="/Category/{{id}}/delete" method="POST">
+                                <input type="submit" value="DELETE">
+                            </form>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+               
+            </div>
+            <div class="rightcontainer">
+                 <button id="addCategoryButton" class="add-category-button">Add Category</button>
+                <div class="popup" id="addCategoryModal">
+                    
+                    <div class="close-btn" id="closeAddCategoryModal">&times;</div>
+                    <div class="form">
+                        <h2>Add Category</h2>
+                        <form class="form-element" action="/AddCategory" method="POST">
+                            <label for="CategoryName">Category Name</label>
+                            <input type="text" id="CategoryName" name="CategoryName" placeholder="Enter category name" required>
+                            <br>
+                            <button type="submit">Add Category</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const editButtons = document.querySelectorAll('.edit-btn');
+            editButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const categoryId = button.parentElement.querySelector('.popup').id;
+                    const editModal = document.getElementById(categoryId);
+                    editModal.classList.toggle('active');
+                });
+            });
 
-        
-    
+            const addCategoryButton = document.getElementById('addCategoryButton');
+            addCategoryButton.addEventListener('click', () => {
+                const addCategoryModal = document.getElementById('addCategoryModal');
+                addCategoryModal.classList.toggle('active');
+            });
 
-        <br>
-        <button type="submit">Add Category </button>
-    </form>
+            const closeAddCategoryModalButton = document.getElementById('closeAddCategoryModal');
+            closeAddCategoryModalButton.addEventListener('click', () => {
+                const addCategoryModal = document.getElementById('addCategoryModal');
+                addCategoryModal.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

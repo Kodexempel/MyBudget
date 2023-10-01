@@ -1,3 +1,39 @@
+//   app.post('/signup', (req, res) => {
+//     const { email, password } = req.body;
+//    console.log("reREQ: "+JSON.stringify(req.body))
+   
+//     bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+//       console.error('hashing '+password);
+//         if (err) {
+//             console.error('Error hashing password:', err.message);
+//             res.status(500).send('An error occurred while signing up.');
+//             return;
+//         }
+
+//         db.get('SELECT * FROM users WHERE email = ?', [email], (err, existingUser) => {
+//             if (err) {
+//                 console.error('Error checking for existing user:', err.message);
+//                 res.status(500).send('An error occurred.');
+//             } else if (existingUser) {
+//                 console.log('User with this email already exists:', email);
+//                 res.render('login', { error: 'Email already exists. Please log in.' });
+//             } else {
+                
+//                 db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, hashedPassword], (err) => {
+//                     if (err) {
+//                         console.error('Error inserting new user:', err.message);
+//                         res.status(500).send('An error occurred while signing up.');
+//                     } else {
+//                         console.log('User signed up successfully:', email);
+//                         res.redirect('/');
+//                     }
+//                 });
+//             }
+//         });
+//     });
+// });
+
+
 const express = require('express');
 const { engine } = require('express-handlebars');
 const port = 1010;

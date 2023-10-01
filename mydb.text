@@ -1,77 +1,85 @@
+db.serialize(() => {
+  
+  db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, email TEXT, userName TEXT, password TEXT)');
 
-// // db.serialize(() => {
+  db.run('INSERT INTO users (email, userName, password) VALUES (?, ?, ?)', ['omer1@gmail.com', 'Omer', '123']);
+  db.run('INSERT INTO users (email, userName, password) VALUES (?, ?, ?)', ['jerome@gmail.com', 'Jerome', '123']);
+
+  
+  db.each('SELECT * FROM users', (err, row) => {
+      if (err) {
+          console.error(err.message);
+      } else {
+          console.log(`User ID: ${row.id}, Email: ${row.email}, User Name: ${row.userName}, Password: ${row.password}`);
+      }
+  });
+});
+
+
+db.serialize(() => {
  
-// //   db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, email TEXT, password TEXT)');
+  db.run('CREATE TABLE IF NOT EXISTS budget (id INTEGER PRIMARY KEY, budgetName TEXT, amount REAL, budgetDate DATE, userId INTEGER, FOREIGN KEY(userId) REFERENCES users(id))');
 
-// //   db.run('INSERT INTO users (email, password) VALUES (?, ?)', ['omer1@gmail.com', 'password123']);
-// //   db.run('INSERT INTO users (email, password) VALUES (?, ?)', ['jerome@gmail.com', 'jerome456']);
+  const currentDate = new Date().toISOString().split('T')[0];
+
+  const insertSampleData = db.prepare('INSERT INTO budget (budgetName, amount, budgetDate, userId) VALUES (?, ?, ?, ?)');
 
  
-// //   db.each('SELECT * FROM users', (err, row) => {
-// //     if (err) {
-// //       console.error(err.message);
-// //     } else {
-// //       console.log(`User ID: ${row.id}, Email: ${row.email}, Password: ${row.password}`);
-// //     }
-// //   });
-// // });
+  insertSampleData.run('Monthly Expenses', 2000.00, currentDate, 1);
+  insertSampleData.run('Groceries', 400.00, currentDate, 2);
+  insertSampleData.run('Entertainment', 300.00, currentDate, 1);
 
-// // db.close();
-// // db.serialize(() => {
-// //     db.run('CREATE TABLE IF NOT EXISTS budget (id INTEGER PRIMARY KEY, budgetName TEXT, amount REAL, userId INTEGER, FOREIGN KEY(userId) REFERENCES users(id))');
-  
-// //     // Insert some sample budget data with user association
-// //     db.run('INSERT INTO budget (budgetName, amount, userId) VALUES (?, ?, ?)', ['Monthly Expenses', 2000.00, 1]); // Here, 1 is the user ID associated with this budget
-// //     db.run('INSERT INTO budget (budgetName, amount, userId) VALUES (?, ?, ?)', ['Groceries', 400.00, 2]); // Here, 2 is the user ID associated with this budget
-// //     db.run('INSERT INTO budget (budgetName, amount, userId) VALUES (?, ?, ?)', ['Entertainment', 300.00, 1]); // Here, 1 is the user ID associated with this budget
-  
-// //     // Query and log the budget entries with user information
-// //     db.each('SELECT budget.id AS budgetId, budget.budgetName AS budgetName, budget.amount AS amount, users.id AS userId, users.email AS userEmail FROM budget INNER JOIN users ON budget.userId = users.id', (err, row) => {
-// //       if (err) {
-// //         console.error(err.message);
-// //       } else {
-// //         console.log(`Budget Entry ID: ${row.budgetId}, Name: ${row.budgetName}, Amount: $${row.amount}, User ID: ${row.userId}, User Email: ${row.userEmail}`);
-// //       }
-// //     });
-// //   });
-  
 
-// //  db.close();
-//  // Modify the categories table to include a budgetId column
-// db.serialize(() => {
-//     db.run('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY, categoryName TEXT, budgetId INTEGER, FOREIGN KEY(budgetId) REFERENCES budget(id))');
-  
-//     // Insert some sample category data with associated budget ID
-//     db.run('INSERT INTO categories (categoryName, budgetId) VALUES (?, ?)', ['Food', 1]); // Here, 1 is the budget ID associated with this category
-//     db.run('INSERT INTO categories (categoryName, budgetId) VALUES (?, ?)', ['Electronics', 2]); // Here, 2 is the budget ID associated with this category
-//     db.run('INSERT INTO categories (categoryName, budgetId) VALUES (?, ?)', ['Clothing', 1]); // Here, 1 is the budget ID associated with this category
-  
-//     // Query and log the categories with associated budget information
-//     db.each('SELECT categories.id AS categoryId, categories.categoryName AS categoryName, budget.id AS budgetId, budget.budgetName AS budgetName FROM categories INNER JOIN budget ON categories.budgetId = budget.id', (err, row) => {
-//       if (err) {
-//         console.error(err.message);
-//       } else {
-//         console.log(`Category ID: ${row.categoryId}, Name: ${row.categoryName}, Budget ID: ${row.budgetId}, Budget Name: ${row.budgetName}`);
-//       }
-//     });
-//   });
-  
-// // Modify the purchases table to include a categoryId column
-// db.serialize(() => {
-//     db.run('CREATE TABLE IF NOT EXISTS purchases (id INTEGER PRIMARY KEY, PurchaseName TEXT, price REAL, categoryId INTEGER, FOREIGN KEY(categoryId) REFERENCES categories(id))');
-  
-//     // Insert some sample purchase data with associated categoryId
-//     db.run('INSERT INTO purchases (PurchaseName, price, categoryId) VALUES (?, ?, ?)', ['Item 1', 10.99, 1]); // Here, 1 is the categoryId associated with this purchase
-//     db.run('INSERT INTO purchases (PurchaseName, price, categoryId) VALUES (?, ?, ?)', ['Item 2', 19.95, 2]); // Here, 2 is the categoryId associated with this purchase
-//     db.run('INSERT INTO purchases (PurchaseName, price, categoryId) VALUES (?, ?, ?)', ['Item 3', 5.99, 1]); // Here, 1 is the categoryId associated with this purchase
-  
-//     // Query and log the purchases with associated category information
-//     db.each('SELECT purchases.id AS purchaseId, purchases.PurchaseName AS purchaseName, purchases.price AS purchasePrice, categories.id AS categoryId, categories.categoryName AS categoryName FROM purchases INNER JOIN categories ON purchases.categoryId = categories.id', (err, row) => {
-//       if (err) {
-//         console.error(err.message);
-//       } else {
-//         console.log(`Purchase ID: ${row.purchaseId}, Name: ${row.purchaseName}, Price: $${row.purchasePrice}, Category ID: ${row.categoryId}, Category Name: ${row.categoryName}`);
-//       }
-//     });
-//   });
-  
+  insertSampleData.finalize();
+
+  db.each('SELECT * FROM budget', (err, row) => {
+      if (err) {
+          console.error(err.message);
+      } else {
+          console.log(`Budget Entry ID: ${row.id}, Name: ${row.budgetName}, Amount: $${row.amount}, Date: ${row.budgetDate}, User ID: ${row.userId}`);
+      }
+  });
+});
+
+db.serialize(() => {
+
+  db.run('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY, categoryName TEXT,userId INTEGER, FOREIGN KEY(userId) REFERENCES users(id))');
+
+ 
+  db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Food',1]);
+  db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Electronics',1]);
+  db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Clothing'.1]);
+
+  db.each('SELECT * FROM categories', (err, row) => {
+      if (err) {
+          console.error(err.message);
+      } else {
+          console.log(`Category ID: ${row.categoryId}, Name: ${row.categoryName},User ID: ${row.userId}`);
+      
+      }
+  });
+});
+
+
+db.serialize(() => {
+  db.run('CREATE TABLE IF NOT EXISTS purchases (id INTEGER PRIMARY KEY, PurchaseName TEXT, price REAL, categoryId INTEGER, budgetId INTEGER, purchaseDate DATE, userId INTEGER, FOREIGN KEY(categoryId) REFERENCES categories(id), FOREIGN KEY(budgetId) REFERENCES budget(id), FOREIGN KEY(userId) REFERENCES users(id))');
+
+  const currentDate = new Date().toISOString().split('T')[0];
+
+
+
+  db.run('INSERT INTO purchases (PurchaseName, price, categoryId, budgetId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', ['Item 1', 10.99, 1, 1, currentDate, 1]);
+  db.run('INSERT INTO purchases (PurchaseName, price, categoryId, budgetId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', ['Item 2', 19.95, 2, 2, currentDate, 1]);
+  db.run('INSERT INTO purchases (PurchaseName, price, categoryId, budgetId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', ['Item 3', 5.99, 1, 1, currentDate, 1]);
+
+  db.each('SELECT purchases.id AS purchaseId, purchases.PurchaseName AS purchaseName, purchases.price AS purchasePrice, categories.id AS categoryId, categories.categoryName AS categoryName, purchases.budgetId AS budgetId, purchases.purchaseDate AS purchaseDate, purchases.userId AS userId FROM purchases INNER JOIN categories ON purchases.categoryId = categories.id', (err, row) => {
+      if (err) {
+          console.error(err.message);
+      } else {
+          console.log(`Purchase ID: ${row.purchaseId}, Name: ${row.purchaseName}, Price: $${row.purchasePrice}, Category ID: ${row.categoryId}, Category Name: ${row.categoryName}, Budget ID: ${row.budgetId}, Purchase Date: ${row.purchaseDate}, User ID: ${row.userId}`);
+      }
+  });
+});
+
+
+

@@ -18,71 +18,87 @@
         </div>
     </div>
 
-    <div class="popup">
-        <div class="close-btn" id="close-login">&times;</div>
-        <div class="form">
-            <h2>Login</h2>
-            <form class="form-element" action="/login" method="POST">
-                <label for="email">Email</label>
-                <input type="text" id="email" name ="email" placeholder="Enter email">
+   <div class="popup">
+    <div class="close-btn" id="close-login">&times;</div>
+    <div class="form">
+        <h2>Login</h2>
+        <form class="form-element" action="/login" method="POST">
+            <div class="form-element">
+                <label for="login-email">Email</label>
+                <input type="text" id="login-email" name="email" placeholder="Enter email">
             </div>
             <div class="form-element">
-                <label for="password">Password</label>
-                <input type="password" id="password" name= "password" placeholder="Enter Password">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" name="password" placeholder="Enter Password">
             </div>
             <div class="form-element">
                 <button>Sign In</button>
             </div>
             <p>Don't have an account? <a href="/">Sign up</a></p>
-            </form>
-        </div>
-    </div> 
-     <div class="popup">
-        <div class="close-btn" id="close-signup">&times;</div>
-        <div class="form">
-            <h2>Sign Up</h2>
-            <form class="form-element" action="/signup" method="POST">
-                <label for="signup-email">Email</label>
-                <input type="text" id="signup-email" name="email" placeholder="Enter email">
-            </div>
-            <div class="form-element">
-                <label for="signup-password">Password</label>
-                <input type="password" id="signup-password" name="password" placeholder="Enter Password">
-            </div>
-         
-      <div class="form-element">
-        <button type="submit">Sign Up</button>
-      </div>
-      <p>Already have an account? <a href="/">Login</a></p>
-           
-            </form>
-        </div>
+        </form>
     </div>
-    <script>  
+</div>
+
+   
+    <div class="popup">
+    <div class="close-btn" id="close-signup">&times;</div>
+    <div class="form">
+        <h2>Sign Up</h2>
+   <form class="form-element" action="/signup" method="POST">
+    <label for="signup-email">Email</label>
+    <input type="text" id="signup-email" name="email" placeholder="Enter email" required>
+
+    <div class="form-element">
+        <label for="signup-username">Username</label>
+        <input type="text" id="signup-username" name="username" placeholder="Enter Username" required >
+    </div>
+
+    <div class="form-element">
+        <label for="signup-password">Password</label>
+        <input type="password" id="signup-password" name="password" placeholder="Enter Password" required >
+    </div>
+
+    <div class="form-element">
+        <label for="confirm-password">Confirm your password</label>
+        <input type="password" id="confirm-password" name="confirmPassword" placeholder="Confirm Password" required>
+    </div>
+
+    <div class="form-element">
+        <button type="submit">Sign Up</button>
+    </div>
+    <p>Already have an account? <a href="/">Login</a></p>
+</form>
+
+
+    </div>
+</div>
+
+        
+ <script>
     const loginModal = document.querySelector(".popup");
-        const signupModal = document.querySelectorAll(".popup")[1]; // Select the second popup
+    const signupModal = document.querySelectorAll(".popup")[1]; 
 
-        document.querySelector("#show-login").addEventListener("click", function () {
-            if (!loginModal.classList.contains("active")) {
-                loginModal.classList.add("active");
-            }
-        });
+    document.querySelector("#show-login").addEventListener("click", function () {
+        if (!loginModal.classList.contains("active")) {
+            loginModal.classList.add("active");
+        }
+    });
 
-        document.querySelector("#close-login").addEventListener("click", function () {
-            if (loginModal.classList.contains("active")) {
-                loginModal.classList.remove("active");
-            }
-        });
+    document.querySelector("#close-login").addEventListener("click", function () {
+        if (loginModal.classList.contains("active")) {
+            loginModal.classList.remove("active");
+        }
+    });
 
-        document.querySelector("#show-signup").addEventListener("click", function () {
-            if (!signupModal.classList.contains("active")) {
-                signupModal.classList.add("active");
-            }
-        });
+    document.querySelector("#show-signup").addEventListener("click", function () {
+        if (!signupModal.classList.contains("active")) {
+            signupModal.classList.add("active");
+        }
+    });
 
-        document.querySelector("#close-signup").addEventListener("click", function () {
-            if (signupModal.classList.contains("active")) {
-                signupModal.classList.remove("active");
-            }
-        });
+    document.querySelector("#close-signup").addEventListener("click", function () {
+        if (signupModal.classList.contains("active")) {
+            signupModal.classList.remove("active");
+        }
+    });
 </script>
