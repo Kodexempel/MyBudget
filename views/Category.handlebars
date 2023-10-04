@@ -1,88 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category</title>
-    <link rel="stylesheet" href="/css/styles-jl.css">
-</head>
-<body>
-    <div id="main">
-        {{> menu}}
-        <div class="container">
-            <div class="leftcontainer">
-                <h1>Your categories</h1>
-                <div class="category-list">
-                    {{#each categories}}
-                    <div class="category-item">
-                        <span>{{categoryName}}</span>
-                        <button class="edit-btn" id="editCategoryButton{{id}}">Edit</button>
-                        <div class="popup" id="editCategoryModal{{id}}">
-                            <div class="close-btn" id="closeEditCategoryModal{{id}}">&times;</div>
-                            <div class="form">
-                                <h2>Edit Category</h2>
-                                <form class="form-element" action="/editCategory/{{id}}" method="POST">
-                                    <label for="editedCategoryName">New Category Name</label>
-                                    <input type="text" id="editedCategoryName" name="editedCategoryName" placeholder="Enter new category name" required>
-                                    <br>
-                                    <button type="submit">Save</button>
-                                </form>
+<div id="main">
+    {{> menu}}
+    
+    <div class="container">
+        <div class="leftcontainer">
+            <h1>Your Categories</h1>
+           
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each Categories}}
+                    <tr>
+                        <td>{{categoryName}}</td>
+                        <td>
+                            <button class="edit-btn" id="editCategoryButton{{id}}">Edit</button>
+                            <div class="popup" id="editCategoryModal{{id}}">
+                                <div class="close-btn" id="closeEditCategoryModal{{id}}">&times;</div>
+                                <div class="form">
+                                    <h2>Edit Category</h2>
+                                    <form class="form-element" action="/editCategory/{{id}}" method="POST">
+                                        <label for="editedCategoryName">New Category Name</label>
+                                        <input type="text" id="editedCategoryName" name="editedCategoryName" placeholder="Enter new category name" required>
+                                        <br>
+                                        <button type="submit">Save</button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
+                        </td>
+                        <td>
+                           
                         <form action="/Category/{{id}}" method="POST">
                             <input type="hidden" name="_method" value="DELETE">
                         </form>
-                        <div>
-                            <form action="/Category/{{id}}/delete" method="POST">
-                                <input type="submit" value="DELETE">
-                            </form>
-                        </div>
-                    </div>
-                    {{/each}}
-                </div>
-               
-            </div>
-            <div class="rightcontainer">
-                 <button id="addCategoryButton" class="add-category-button">Add Category</button>
-                <div class="popup" id="addCategoryModal">
                     
-                    <div class="close-btn" id="closeAddCategoryModal">&times;</div>
-                    <div class="form">
-                        <h2>Add Category</h2>
-                        <form class="form-element" action="/AddCategory" method="POST">
-                            <label for="CategoryName">Category Name</label>
-                            <input type="text" id="CategoryName" name="CategoryName" placeholder="Enter category name" required>
-                            <br>
-                            <button type="submit">Add Category</button>
-                        </form>
-                    </div>
+                           
+                            <form action="/Category/{{id}}/delete" method="POST">
+                                <input  class="deletebutton" type="submit" value="DELETE">
+
+                            </form>
+                            
+                        
+                    
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div class="rightcontainer">
+            <button id="addCategoryButton" class="add-category-button">Add Category</button>
+            <div class="popup" id="addCategoryModal">
+                <div class="close-btn" id="closeAddCategoryModal">&times;</div>
+                <div class="form">
+                    <h2>Add Category</h2>
+                    <form class="form-element" action="/AddCategory" method="POST">
+                        <label for="CategoryName">Category Name</label>
+                        <input type="text" id="CategoryName" name="CategoryName" placeholder="Enter category name" required>
+                        <br>
+                        <button type="submit">Add Category</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const editButtons = document.querySelectorAll('.edit-btn');
-            editButtons.forEach((button) => {
-                button.addEventListener('click', () => {
-                    const categoryId = button.parentElement.querySelector('.popup').id;
-                    const editModal = document.getElementById(categoryId);
-                    editModal.classList.toggle('active');
-                });
-            });
-
-            const addCategoryButton = document.getElementById('addCategoryButton');
-            addCategoryButton.addEventListener('click', () => {
-                const addCategoryModal = document.getElementById('addCategoryModal');
-                addCategoryModal.classList.toggle('active');
-            });
-
-            const closeAddCategoryModalButton = document.getElementById('closeAddCategoryModal');
-            closeAddCategoryModalButton.addEventListener('click', () => {
-                const addCategoryModal = document.getElementById('addCategoryModal');
-                addCategoryModal.classList.remove('active');
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const editButtons = document.querySelectorAll('.edit-btn');
+        editButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const categoryId = button.parentElement.querySelector('.popup').id;
+                const editModal = document.getElementById(categoryId);
+                editModal.classList.toggle('active');
             });
         });
-    </script>
-</body>
-</html>
+
+        const addCategoryButton = document.getElementById('addCategoryButton');
+        addCategoryButton.addEventListener('click', () => {
+            const addCategoryModal = document.getElementById('addCategoryModal');
+            addCategoryModal.classList.toggle('active');
+        });
+
+        const closeButtons = document.querySelectorAll('.close-btn'); 
+        closeButtons.forEach((closeButton) => {
+            closeButton.addEventListener('click', () => {
+                closeButton.parentElement.classList.remove('active');
+            });
+        });
+    });
+</script>

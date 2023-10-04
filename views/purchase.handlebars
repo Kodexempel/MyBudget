@@ -4,22 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purchases</title>
-    <link rel="stylesheet" href="/css/styles-jl.css">
+    {{!-- <link rel="stylesheet" href="/css/styles-jl.css"> --}}
 </head>
 <body>
     <div id="main">
         {{> menu}}
-        
-        <div class="container">
-            <div class="leftcontainer">
-                <h1>Purchases</h1>
-                {{#each Purchases}}
-                <div class="purchase-item">
-                    <span>{{PurchaseName}}-{{price}} SEK -{{purchaseDate}}</span>
-                </div>
-                {{/each}}
+                                          <h1>Your purchases</h1>
+      
+       {{!-- <div class="container">
+            <div class ="leftcontainer"> --}}
+            
+          <hr>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Purchase Name</th>
+                        <th>Price (SEK)</th>
+                        <th>Purchase Date</th>
+                        
+                    </tr>
+                    
+                </thead>
+            
+                <tbody>
+                    {{#each Purchases}}
+                    <tr>
+                        <td>{{PurchaseName}}</td>
+                        <td>{{price}}</td>
+                        <td>{{purchaseDate}}</td>
+                    </tr>
+                    
+                    {{/each}}
+                </tbody>
+            </table>
             </div>
-            <div class="rightcontainer">
+            
                 <div class="popup" id="add-purchase-modal">
                     <div class="close-btn" id="close-add-purchase">&times;</div>
                     <div class="form">
@@ -32,16 +51,16 @@
                             <input type="number" id="price" name="price" required>
                             <br>
                             <label for="budget">Select a Budget:</label>
-                            <select id="budget" name="budget" required>
+                            <select id="budget" name="budget" required class="custom-select">
                                 {{#each budgets}}
                                 <option value="{{id}}">{{budgetName}}</option>
                                 {{/each}}
                             </select>
                             <br>
                             <label for="category">Select a Category:</label>
-                            <select id="category" name="category" required>
+                            <select id="category" name="category" required class="custom-select">
                                 {{#each categories}}
-                                <option value="{{id}}">{{CategoryName}}</option>
+                                <option value="{{id}}">{{categoryName}}</option>
                                 {{/each}}
                             </select>
                             <br>

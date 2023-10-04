@@ -26,6 +26,12 @@ app.use(express.static('public'));
 app.get('/', (request, response) => {
     response.render('Login.handlebars');
   });
+  // app.get('/login', (request, response) => {
+  //   response.render('login');
+  // });
+//   app.get('/signup', (request, response) => {
+//     response.render('signup');
+// });
 app.get('/Home', (req, res) => {
     const userId = req.session.userId;
     if (!userId) {
@@ -69,7 +75,7 @@ app.get('/Home', (req, res) => {
           } else if (result) {
             console.log('Login successful for user:', user);
             req.session.userId = user.id;
-            req.session.successMessage = 'Login successful! Welcome to the application.';
+            // req.session.successMessage = 'Login successful! Welcome to the application.';
             res.redirect('/Home');
           } else {
             console.log('Invalid password for user:', user);
@@ -222,7 +228,7 @@ app.get('/Category', (req, res) => {
       console.error(err.message);
       res.status(500).send('An error occurred.');
     } else {
-      res.render('Category.handlebars', { categories: rows, userId });
+      res.render('Category.handlebars', { Categories: rows, userId });
     }
   });
 });
@@ -243,10 +249,10 @@ app.post('/AddCategory', (req, res) => {
           res.status(500).send('An error occurred.');
         } else {
           req.session.successMessage = 'Item added successfully!';
-          res.render('Category.handlebars', { categories: rows});
+          res.render('Category.handlebars', { Categories: rows, successMessage: req.session.successMessage});
         }
       });
-    }
+    } 
   });
 });
 
@@ -271,6 +277,7 @@ app.post('/Category/:id/delete', (req, res) => {
           console.error(err.message);
           res.status(500).send('An error occurred.');
       } else {
+        
           res.redirect('/Category');
       }
   });
@@ -406,7 +413,43 @@ app.post('/changePassword', (req, res) => {
     }
   });
 });
+app.get('/Deleteaccount', (req, res) => {
+  res.render('Deleteaccount.handlebars');
+});
 
+app.get('/deleteAccount', (req, res) => {
+  res.render('deleteAccount');
+});
+
+app.post('/deleteAccount', (req, res) => {
+  const userId = req.session.userId;
+
+  if (!userId) {
+      res.redirect('/');
+      return;
+  }
+
+  db.run('DELETE FROM users WHERE id = ?', [userId], (err) => {
+      if (err) {
+          console.error('Error deleting user:', err.message);
+          res.status(500).send('An error occurred while deleting the account.');
+      } else {
+          
+          req.session.destroy((sessionErr) => {
+              if (sessionErr) {
+                  console.error('Error destroying session:', sessionErr.message);
+              }
+
+             
+              res.redirect('/'); 
+          });
+      }
+  });
+});
+
+app.get('/footer', (req, res) => {
+  res.render('footer.handlebars');
+});
 
 app.use((req, res) => {
   res.status(404).render('404.handlebars');

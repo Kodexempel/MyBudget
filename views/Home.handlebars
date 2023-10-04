@@ -9,30 +9,64 @@
 <body>
     <div id="main">
         {{> menu}}
+
     </div>
-    <div class="myhome-welcome">
+    <div class="myhome-welcome" style="margin-bottom: 20px;">
         <h1> Welcome, {{user.userName}}!</h1>
-        <a href="/changePassword">Change Password</a>
+        {{!-- <a href="/changePassword">Change Password</a> --}}
+        {{!-- <a href ="/Deleteaccount">Delete your account</a> --}}
+         
     </div>
-    <div class="profile-container">
-        <img id="open-user-modal" src="/img/user profile.png" alt="Your Profile Picture">
+    <div class="profile-container" style="margin-bottom: 22%;">
+        {{!-- <img id="open-user-modal" src="/img/user profile.png" alt="Your Profile Picture"> --}}
         <div class="modal" id="user-modal">
             <div class="modal-content">
                 {{#if user}}
                     <h1>User: {{user.userName}}!</h1>
                     <p>Your email: {{user.email}}</p>
-                    <a href="logout">
+                    {{!-- <a href="logout">
                         <span class="logout-link">
                             <img src="/img/icons8-logout-50.png" alt="Logout">
                         </span>
-                    </a>
+                    </a> --}}
+                     <a href="/changePassword">Change Password</a>
+                     <br>
+                    <a href ="/Deleteaccount">Delete your account</a>
                 {{else}}
                     <p>No user data available.</p>
                 {{/if}}
             </div>
         </div>
     </div>
+     
+     {{!-- About  --}}
+   <div id="about">
 
+            <h2>About Us :</h2>
+            <br>
+            <img src="/img/aboutus.jpg"  alt="About Us Image">
+    
+            <p>Welcome to Your Budget App! We are dedicated to helping you <br>
+             take control of your finances and manage your expenses effectively.</p>
+            
+            <h3>Our Mission</h3>
+            <p>Our mission is to provide a simple and user-friendly budgeting tool <br>
+                that empowers individuals and families to make informed financial decisions. <br>
+                 We believe that financial well-being is essential for a stress-free and fulfilling life.</p>
+            
+            <h3>Features</h3>
+            <ul>
+                <li>Track your income and expenses</li>
+                <li>Create and manage budget categories</li>
+                <li>Add and categorize your purchases</li>
+                <li>View detailed reports and insights</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{{!--    
+     {{>footer}} --}}
    <script>
         const openUserModalButton = document.getElementById('open-user-modal');
         const userModal = document.getElementById('user-modal');

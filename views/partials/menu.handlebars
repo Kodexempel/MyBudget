@@ -1,35 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles-jl.css">
 </head>
 <body style="background-color: #282C34;">
     <div class="center-menu">
-        <header>
+       
+         <header>
+            <button id="toggle-menu" class="burger-menu">&#9776;</button>
             <nav id="menu">
-                <a href ="/Home">Home</a>
+                 <img id="open-user-modal" src="/img/user profile.png" alt="Your Profile Picture">
+                <a href="/Home">Home</a>
                 <a href="/Purchase">Purchase</a>
                 <a href="/Budget">Budget</a>
                 <a href="/Category">Category</a>
+                <a href="logout">
+                        <span class="logout-link">
+                            <img src="/img/icons8-logout-50.png" alt="Logout">
+                        </span>
+                    </a>
             </nav>
         </header>
     </div>
    
-    <a href="/logout" class="logout-button">Logout</a>
+ <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const toggleMenuButton = document.getElementById('toggle-menu');
+    const menu = document.getElementById('menu');
+
+    toggleMenuButton.addEventListener('click', function() {
+        if (menu.style.display === 'block') {
+            menu.style.display = 'none';
+        } else {
+            menu.style.display = 'block';
+        }
+    });
+});
+
+ </script>
     
 </body>
-  <footer class="center-footer">
-        <div class="Contact1">
-        <h1>Contact : </h1>
-        <address>
-            <div class="contact-info">
-                <p><strong>Phone Number:</strong><br>07 07 07 07 07 07</p>
-                <p><strong>Email:</strong><br><a href="mailto:omer.ammo11@gmail.com">omer.ammo11@gmail.com</a></p>
-            </div>
-            <div class="address-footer">
-                <p><strong>Address:</strong><br>Dunkehallavagen 78<br>554 47 Jonkoping</p>
-            </div>
-        </address>
-    </div>
-    </footer>
+  
 </html>
