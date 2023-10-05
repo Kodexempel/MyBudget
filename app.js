@@ -23,6 +23,7 @@ app.use(express.static('public'));
 
 
 
+
 app.get('/', (request, response) => {
     response.render('Login.handlebars');
   });
@@ -54,7 +55,13 @@ app.get('/Home', (req, res) => {
       }
     });
   });
-  
+
+  app.get('/About', (request, response) => {
+    response.render('About.handlebars');
+  });
+  app.get('/Contact', (request, response) => {
+    response.render('Contact.handlebars');
+  });
   app.post('/login', (req, res) => {
     const { email, password } = req.body;
   
@@ -293,31 +300,74 @@ app.get('/Purchase', (req, res) => {
     return;
   }
 
-  db.all('SELECT * FROM purchases', (err, rows) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).send('An error occurred while fetching purchases.');
-      return;
-    }
-
+  
+  const MyBudgets = new Promise((resolve, reject) => {
     db.all('SELECT * FROM budget', (err, budgetRows) => {
       if (err) {
-        console.error(err.message);
-        res.status(500).send('An error occurred while fetching budgets.');
-        return;
+        reject(err);
+      } else {
+        resolve(budgetRows);
       }
-
-      db.all('SELECT * FROM categories', (err, categoryRows) => {
-        if (err) {
-          console.error(err.message);
-          res.status(500).send('An error occurred while fetching categories.');
-          return;
-        }
-
-        res.render('Purchase.handlebars', { budgets: budgetRows, categories: categoryRows });
-      });
     });
   });
+
+  const MyCategories = new Promise((resolve, reject) => {
+    db.all('SELECT * FROM categories', (err, categoryRows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(categoryRows);
+      }
+    });
+  });
+
+  
+  const MyPurchases = new Promise((resolve, reject) => {
+    db.all('SELECT * FROM purchases', (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+
+  Promise.all([MyBudgets, MyCategories, MyPurchases])
+    .then(([budgetRows, categoryRows, purchaseRows]) => {
+      res.render('Purchase.handlebars', {
+        budgets: budgetRows,
+        categories: categoryRows,
+        Purchases: purchaseRows,
+      });
+    })
+    .catch((err) => {
+      console.error(err.message);
+      res.status(500).send('An error occurred while fetching data.');
+    });
+});
+
+app.post('/AddPurchase', (req, res) => {
+  const { PurchaseName, price, budget, category, purchaseDate } = req.body;
+  const userId = req.session.userId;
+
+  if (!userId) {
+    res.redirect('/');
+    return;
+  }
+
+  db.run(
+    'INSERT INTO purchases (PurchaseName, price, budgetId, categoryId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)',
+    [PurchaseName, price, budget, category, purchaseDate, userId],
+    (err) => {
+      if (err) {
+        console.error(err.message);
+        res.status(500).send('An error occurred while inserting the purchase.');
+      } else {
+       
+        res.redirect('/Purchase');
+      }
+    }
+  );
 });
 
 
@@ -446,6 +496,7 @@ app.post('/deleteAccount', (req, res) => {
       }
   });
 });
+
 
 app.get('/footer', (req, res) => {
   res.render('footer.handlebars');

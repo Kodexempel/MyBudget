@@ -1,96 +1,14 @@
-{{!-- <div id="main">
-    {{> menu}}
-   <div class="container">
-    <div class="leftcontainer">
-        <h1>Your Budget</h1>
-        {{#each budgets}}
-        <div class="budget-item">
-            <span>{{budgetName}} -  {{amount}} SEK </span>
-            <br>
-                <span> {{budgetDate}}</span>
-            <button class="edit-btn" id="editBudgetButton{{id}}">Edit</button>
-            <div class="popup" id="editBudgetModal{{id}}">
-                <div class="close-btn" id="closeEditBudgetModal{{id}}">&times;</div>
-                <div class="form">
-                    <h2>Edit Budget</h2>
-                    <form class="form-element" action="/editBudget/{{id}}" method="POST">
-                        <label for="editedBudgetName">New Budget Name</label>
-                        <input type="text" id="editedBudgetName{{id}}" name="editedBudgetName" placeholder="Enter new budget name" required>
-                        <br>
-                        <label for="editedAmount">New Amount</label>
-                        <input type="number" id="editedAmount{{id}}" name="editedAmount" placeholder="Enter new amount" required>
-                        <br>
-                        <button type="submit">Save</button>
-                    </form>
-                </div>
-            </div>
-            <form action="/Budget/{{id}}" method="POST">
-                <input type="hidden" name="_method" value="DELETE">
-            </form>
-            <div>
-                
-                <form action="/Budget/{{id}}/delete" method="POST">
-                <input class="deletebutton" type="submit" value="DELETE"></form>
-            </div>
-           
-        </div>
-        {{/each}}
-    </div>
-    <div class="rightcontainer">
-        <button id="addBudgetButton" class="add-budget-button">Add Budget</button>
-        <div class="popup" id="addBudgetModal">
-            <div class="close-btn" id="closeAddBudgetModal">&times;</div>
-            <div class="form">
-                <h2>Add Budget</h2>
-                <form class="form-element" action="/AddBudget" method="POST">
-                    <label for="budgetName">Budget Name</label>
-                    <input type="text" id="budgetName" name="budgetName" placeholder="Enter budget name" required>
-                    <br>
-                    <label for="amount">Amount</label>
-                    <input type="number" id="amount" name="amount" placeholder="Enter amount" required>
-                    <br>
-                    <br>
-                    <label for="budgetDate">Date</label>
-                    <input type="date" id="budgetDate" name="budgetDate" required>
-                    <br>
-                    <br>
-                    <button type="submit">Add Budget</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const editButtons = document.querySelectorAll('.edit-btn');
-        editButtons.forEach((button) => {
-            button.addEventListener('click', () => {
-                const budgetId = button.parentElement.querySelector('.popup').id;
-                const editModal = document.getElementById(budgetId);
-                editModal.classList.toggle('active');
-            });
-        });
 
-        const addBudgetButton = document.getElementById('addBudgetButton');
-        addBudgetButton.addEventListener('click', () => {
-            const addBudgetModal = document.getElementById('addBudgetModal');
-            addBudgetModal.classList.toggle('active');
-        });
-
-        const closeButtons = document.querySelectorAll('.close-btn');
-        closeButtons.forEach((closeButton) => {
-            closeButton.addEventListener('click', () => {
-                closeButton.parentElement.classList.remove('active');
-            });
-        });
-    });
-    
-</script> --}}
 <div id="main">
     {{> menu}}
+   
+     <br>
+    <br>
+    <h1> Your Budgets :</h1>
     <div class="container">
-        <div class="leftcontainer">
-            <h1>Your Budget</h1>
+        <div class="columns">
+             <div class="column  col-xs-12 col-sm-6 col-lg-3 and col-xs-12 col-sm-6 col-lg-6 left-container">
+            
             <table>
                 <thead>
                     <tr>
@@ -142,8 +60,8 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="rightcontainer">
+    
+     <div class="column  col-xs-12 col-sm-6 col-lg-3 and col-xs-12 col-sm-6 col-lg-6 middle-container">
         <button id="addBudgetButton" class="add-budget-button">Add Budget</button>
         <div class="popup" id="addBudgetModal">
             <div class="close-btn" id="closeAddBudgetModal">&times;</div>
@@ -193,4 +111,5 @@
         });
     });
 </script>
+
 

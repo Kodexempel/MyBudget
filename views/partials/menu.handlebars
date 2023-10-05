@@ -1,44 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {{!-- <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css"> --}}
     <link rel="stylesheet" type="text/css" href="/css/styles-jl.css">
 </head>
 <body style="background-color: #282C34;">
     <div class="center-menu">
-       
-         <header>
+        <header>
             <button id="toggle-menu" class="burger-menu">&#9776;</button>
             <nav id="menu">
-                 <img id="open-user-modal" src="/img/user profile.png" alt="Your Profile Picture">
+                <img id="open-user-modal" src="/img/user profile.png" alt="Your Profile Picture">
                 <a href="/Home">Home</a>
                 <a href="/Purchase">Purchase</a>
                 <a href="/Budget">Budget</a>
                 <a href="/Category">Category</a>
+                <a href="/About">About us</a>
+                <a href="/Contact"> Contact Us</a>
                 <a href="logout">
-                        <span class="logout-link">
-                            <img src="/img/icons8-logout-50.png" alt="Logout">
-                        </span>
-                    </a>
+                    <span class="logout-link">
+                        <img src="/img/icons8-logout-50.png" alt="Logout">
+                    </span>
+                </a>
             </nav>
         </header>
     </div>
-   
- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const toggleMenuButton = document.getElementById('toggle-menu');
-    const menu = document.getElementById('menu');
 
-    toggleMenuButton.addEventListener('click', function() {
-        if (menu.style.display === 'block') {
-            menu.style.display = 'none';
-        } else {
-            menu.style.display = 'block';
-        }
-    });
-});
+    <div id="page-title" class="centered-text"></div>
 
- </script>
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleMenuButton = document.getElementById('toggle-menu');
+            const menu = document.getElementById('menu');
+            const currentPageURL = window.location.pathname;
+            const menuLinks = document.querySelectorAll("#menu a");
+
+            toggleMenuButton.addEventListener('click', function () {
+                if (menu.style.display === 'block') {
+                    menu.style.display = 'none';
+                } else {
+                    menu.style.display = 'block';
+                }
+            });
+
+            menuLinks.forEach(function (link) {
+                if (link.getAttribute("href") === currentPageURL) {
+                    link.classList.add("active-page");
+                }
+            });
+
+            const activePageText = document.querySelector(".active-page").textContent;
+            const pageTitle = document.querySelector("#page-title");
+            pageTitle.textContent = activePageText;
+        });
+    </script>
+
 </body>
-  
+
 </html>
