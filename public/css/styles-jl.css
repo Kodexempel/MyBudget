@@ -300,16 +300,16 @@ img#open-user-modal {
     border-radius: 50%;
 }
 
-.modal {
+.usermodal {
     display: none;
      position: fixed; 
-    background: linear-gradient(to right, #2A9D8F, #0000);
-    padding: 20px;
+    background: linear-gradient(to right, #0000,#2A9D8F);
+    padding: 30px;
     top: 30%;
     right : 0;
     margin:50px;
     transform: translate(-50%, -50%);
-    width: 200px;
+    display:inline-block;
     box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.15);
     border-radius: 10px;
     z-index: 2;
@@ -317,22 +317,22 @@ img#open-user-modal {
     color: white; 
     font-size: 18px; 
     line-height: 1.5; 
-    transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+    transition:  ease-in-out, transform 200ms ease-in-out;
 }
 
-.modal-content {
+.myusermodal-content{
     color: #ABB2BF;
     text-align: start;
-    font-size: 12px;
+    font-size: 10px;
 }
 
-.modal.active {
+.usermodal.active {
     display: block;
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
 }
 
-.modal .close-btn {
+.usermodal .close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -345,18 +345,18 @@ img#open-user-modal {
     cursor: pointer;
 }
 
-.modal .form h2 {
+.usermodal .form h2 {
     text-align: center;
     color: #ABB2BF;
     margin: 10px 0px 20px;
     font-size: 25px;
 }
 
-.modal .form-element {
+.usermodal .form-element {
     margin: 15px 0px;
 }
 
-.modal .form .form-element label {
+.usermodal .form .form-element label {
     font-size: 14px;
     color: #ABB2BF;
 }
@@ -456,18 +456,20 @@ th, td {
 
   /* my footer */
  
-.center-footer {
+footer {
     background-color: #282C34;
     color: white;
     /* padding: 20px; */
-   
-    position: absolute;
+
+    font-size: 10px;
+    /* position: absolute; */
     bottom: 0;
-    width: 100%;
-  }
-  
-  .Contact1 {
+    /* width: 100%; */
    
+  }
+/*   
+  .Contact1 {
+    font-size: 12px;
     text-align: left;
    
   }
@@ -497,7 +499,7 @@ th, td {
   .footer-links ul a:hover {
     color: #61dafb; 
   }
-  
+   */
 
   @media (max-width: 768px) {
     #toggle-menu {

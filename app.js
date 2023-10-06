@@ -235,7 +235,7 @@ app.get('/Category', (req, res) => {
       console.error(err.message);
       res.status(500).send('An error occurred.');
     } else {
-      res.render('Category.handlebars', { Categories: rows, userId });
+      res.render('Category.handlebars', { Categories: rows, userId, successMessage: req.session.successMessage });
     }
   });
 });
@@ -266,7 +266,7 @@ app.post('/AddCategory', (req, res) => {
 app.post('/editCategory/:id', (req, res) => {
   const categoryId = req.params.id;
   const editedCategoryName = req.body.editedCategoryName;
-
+  req.session.successMessage="this is edited category";
   db.run('UPDATE Categories SET CategoryName = ? WHERE id = ?', [editedCategoryName, categoryId], (err) => {
       if (err) {
           console.error(err.message);

@@ -19,11 +19,11 @@
     </div>
     <div class="profile-container" style="margin-bottom: 22%;">
        
-        <div class="modal" id="user-modal">
-            <div class="modal-content">
+        <div class="usermodal" id="user-modal">
+            <div class="myusermodal-content">
             
                 {{#if user}}
-                    <h1>User: {{user.userName}}!</h1>
+                    <p>User: {{user.userName}}!</p>
                     <p>Your email: {{user.email}}</p>
                    
                      <a href="/changePassword">Change Password</a>
@@ -56,9 +56,15 @@
         });
 
         closeUserModalButton.addEventListener('click', () => {
-            userModal.style.display = 'none';
-            isUserModalOpen = false;
+             if (!isUserModalOpen) {
+                userModal.style.display = 'block';
+                isUserModalOpen = true;
+            } else {
+                userModal.style.display = 'none';
+                isUserModalOpen = false;
+            }
         });
+    
     </script>
 </body>
 </html>
