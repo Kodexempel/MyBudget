@@ -48,7 +48,8 @@
             <div class="form-element">
                 <button>Sign In</button>
             </div>
-            <p>Don't have an account? <a href="/">Sign up</a></p>
+            <p>Don't have an account? <a id="Dont-have-account" href="#">Sign up</a></p>
+
         </form>
     </div>
 </div>
@@ -80,7 +81,8 @@
     <div class="form-element">
         <button type="submit">Sign Up</button>
     </div>
-    <p>Already have an account? <a href="/">Login</a></p>
+    
+    <p>Already have an account? <a id="already-have-account" href="#">Login</a></p>
 </form>
 
 
@@ -92,28 +94,46 @@
     const loginModal = document.querySelector(".popup");
     const signupModal = document.querySelectorAll(".popup")[1]; 
 
-    document.querySelector("#show-login").addEventListener("click", function () {
-        if (!loginModal.classList.contains("active")) {
-            loginModal.classList.add("active");
+  
+
+    function openModal(modal) {
+        if (!modal.classList.contains("active")) {
+            modal.classList.add("active");
         }
+    }
+
+    function closeModal(modal) {
+        if (modal.classList.contains("active")) {
+            modal.classList.remove("active");
+        }
+    }
+
+    document.querySelector("#show-login").addEventListener("click", function () {
+        closeModal(signupModal); // Close signup modal
+        openModal(loginModal);   // Open login modal
     });
 
     document.querySelector("#close-login").addEventListener("click", function () {
-        if (loginModal.classList.contains("active")) {
-            loginModal.classList.remove("active");
-        }
+        closeModal(loginModal); // Close login modal
     });
 
     document.querySelector("#show-signup").addEventListener("click", function () {
-        if (!signupModal.classList.contains("active")) {
-            signupModal.classList.add("active");
-        }
+        closeModal(loginModal); // Close login modal
+        openModal(signupModal); // Open signup modal
     });
 
     document.querySelector("#close-signup").addEventListener("click", function () {
-        if (signupModal.classList.contains("active")) {
-            signupModal.classList.remove("active");
-        }
+        closeModal(signupModal); // Close signup modal
+    });
+
+    document.querySelector("#Dont-have-account").addEventListener("click", function () {
+        closeModal(loginModal); // Close login modal
+        openModal(signupModal); // Open signup modal
+    });
+
+    document.querySelector("#already-have-account").addEventListener("click", function () {
+        closeModal(signupModal); // Close signup modal
+        openModal(loginModal);   // Open login modal
     });
 </script>
 

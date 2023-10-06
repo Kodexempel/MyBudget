@@ -3,6 +3,7 @@
     padding: 0;
     /* font-family: sans-serif; */
     box-sizing: border-box;
+  
 }
 a{
     color: #ABB2BF;
@@ -16,6 +17,7 @@ a{
     margin-top: 32px;
     box-sizing: content-box;
     color: #ABB2BF;
+ 
     
    
 }
@@ -27,6 +29,7 @@ a{
     height: 70px;
     margin: 0;
     padding: 0;
+    border-radius: 10px;
 }
 .centered-text {
     font-size: 50px;
@@ -62,18 +65,21 @@ a{
     height:  60% ;
     
     margin: 10px 10px 10px 10px;
-    background: linear-gradient(to right, #2A9D8F, #0000);
+    /* background: linear-gradient(to right, #2A9D8F, #0000); */
+    /* background :#282C34; */
+    /* background-color: #2A9D8F; */
     padding: 20px;
     z-index: 1;
     text-align: center;
     border-radius: 10px; 
     margin: 50px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 
 }
 
 #menu a {
     display: block;
-    color: white;
+    color: #ABB2BF;
     text-decoration: none;
     font-size: 18px;
     margin-bottom: 10px;
@@ -119,7 +125,7 @@ a:visited {
             cursor: pointer;
             border-radius: 5px;
         }
-
+        
         .popup {
             position: absolute;
             top: -150%;
@@ -144,6 +150,7 @@ a:visited {
                         opacity 200ms ease-in-out 0ms,
                         transform 200ms ease-in-out 0ms;
                         background-color: #2A9D8F;
+                        z-index: 2;
         }
 
         .popup .close-btn {
@@ -216,7 +223,7 @@ a:visited {
    button:hover {
                 background: #137d68;
             }
-            button {
+      button {
                 padding: 10px 20px;
                 font-size: 15px;
                 font-weight: 600;
@@ -289,6 +296,10 @@ p{
 
 
 }
+.text-button{
+    padding: 0;
+    color: #ABB2BF;
+}
 .profile-container{
     text-align: center;
     position: relative;
@@ -300,25 +311,26 @@ img#open-user-modal {
     border-radius: 50%;
 }
 
-.usermodal {
+
+   .usermodal {
     display: none;
-     position: fixed; 
-    background: linear-gradient(to right, #0000,#2A9D8F);
-    padding: 30px;
-    top: 30%;
-    right : 0;
-    margin:50px;
-    transform: translate(-50%, -50%);
-    display:inline-block;
-    box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: auto; /* Adjust height based on content */
+    margin: 10px 10px 10px 10px;
+    /* background: linear-gradient(to right, #2A9D8F, #0000); */
+   background :#282C34;
+    padding: 20px;
+    z-index: 1;
+    text-align: center;
     border-radius: 10px;
-    z-index: 2;
-    text-align: left;
-    color: white; 
-    font-size: 18px; 
-    line-height: 1.5; 
-    transition:  ease-in-out, transform 200ms ease-in-out;
+    margin: 50px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
+
+
 
 .myusermodal-content{
     color: #ABB2BF;
@@ -455,51 +467,12 @@ th, td {
   }
 
   /* my footer */
- 
-footer {
-    background-color: #282C34;
-    color: white;
-    /* padding: 20px; */
 
-    font-size: 10px;
-    /* position: absolute; */
-    bottom: 0;
-    /* width: 100%; */
-   
-  }
-/*   
-  .Contact1 {
-    font-size: 12px;
-    text-align: left;
-   
-  }
+/* Define styles for your footer */
+
+
   
-  .contact-info p,
-  .address-footer p {
-    margin: 5px 0;
-  }
-  
-  .footer-links ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
- 
-   
-    margin-top: 10px;
-  }
-  
-  .footer-links ul a {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-    font-weight: bold;
-  }
-  
-  
-  .footer-links ul a:hover {
-    color: #61dafb; 
-  }
-   */
+
 
   @media (max-width: 768px) {
     #toggle-menu {
@@ -548,6 +521,18 @@ footer {
         
         font-size: 20px; 
     }
+    button {
+       
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff; 
+        background: #264653; 
+        border: none;
+        outline: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    
 }
 @media (max-width: 368px) {
     .centered-text {
@@ -556,5 +541,28 @@ footer {
         margin-top: -50px;
        
      }
+     .whyuusinfo {
+        width: 220px; 
+        
+        /* background-color: #959595; */
+        text-align: center; 
+        margin: 0 auto;
+        padding: 40px; 
+        margin-top: 15%;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
+        color: #e0e6f3;
+      }
+      h1{
+        font-size: 15px;
+      }
+      h2{
+        font-size: 12px;
+        color: #DEB992;
+    }
+    p{
+        font-size : 10px;
+    }
+    
 
 }

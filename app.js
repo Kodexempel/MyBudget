@@ -24,6 +24,7 @@ app.use(express.static('public'));
 
 
 
+
 app.get('/', (request, response) => {
     response.render('Login.handlebars');
   });
@@ -33,28 +34,58 @@ app.get('/', (request, response) => {
 //   app.get('/signup', (request, response) => {
 //     response.render('signup');
 // });
-app.get('/Home', (req, res) => {
-    const userId = req.session.userId;
-    if (!userId) {
-      res.redirect('/');
-      return;
+// app.get('/addBalance',(req,res) =>{
+//   res.render('/Home');
+// });
+app.post('/addBalance', (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    res.redirect('/');
+    return;
+  }
+
+  const { amount } = req.body;
+
+  if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+    res.render('Home.handlebars', { user: req.session.user, error: 'Invalid amount.' });
+                                        
+    return;
+  }
+
+  db.run('UPDATE users SET Balance = Balance + ? WHERE id = ?', [amount, userId], (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('An error occurred while adding balance.');
+    } else {
+      
+      res.render('Home.handlebars', { user: req.session.user, successMessage: 'Balance added successfully!' });
+                                             
     }
-  
-    
-    db.get('SELECT email, userName FROM users WHERE id = ?', [userId], (err, user) => {
-      if (err) {
-        console.error(err.message);
-        
-        res.status(500).send('An error occurred while fetching user data.');
-      } else if (user) {
-        
-        res.render('Home.handlebars', { user });
-      } else {
-       
-        res.status(404).send('User not found.');
-      }
-    });
   });
+});
+
+
+app.get('/Home', (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    res.redirect('/');
+    return;
+  }
+
+  db.get('SELECT email, userName, Balance FROM users WHERE id = ?', [userId], (err, user) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('An error occurred while fetching user data.');
+    } else if (user) {
+      res.render('Home.handlebars', { user });
+    } else {
+      res.status(404).send('User not found.');
+    }
+  });
+});
+
+
+
 
   app.get('/About', (request, response) => {
     response.render('About.handlebars');
@@ -405,7 +436,7 @@ app.post('/AddPurchase', (req, res) => {
 
 
 app.get('/changePassword', (req, res) => {
-  res.render('changePassword.handlebars');
+  res.render('changePassword');
 });
 
 app.post('/changePassword', (req, res) => {
@@ -453,10 +484,10 @@ app.post('/changePassword', (req, res) => {
                 }
               });
             } else {
-              res.render('changePassword.handlebars', { error: 'New password and confirmation do not match.' });
+              res.render('Home.handlebars', { error: 'New password and confirmation do not match.' });
             }
           } else {
-            res.render('changePassword.handlebars', { error: 'Current password is incorrect.' });
+            res.render('Home.handlebars', { error: 'Current password is incorrect.' });
           }
         }
       });

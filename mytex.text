@@ -49,7 +49,7 @@ db.serialize(() => {
  
   db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Food',1]);
   db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Electronics',1]);
-  db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Clothing'.1]);
+  db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Clothing',1]);
 
   db.each('SELECT * FROM categories', (err, row) => {
       if (err) {
@@ -81,6 +81,5 @@ db.serialize(() => {
       }
   });
 });
-
 
 

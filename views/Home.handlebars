@@ -1,23 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category</title>
-    <link rel="stylesheet" href="/css/styles-jl.css">
-</head>
-<body>
+
     <div id="main">
         {{> menu}}
           <br>
     <br>
     </div>
-    <div class="myhome-welcome" style="margin-bottom: 20px;">
-        <h1> Welcome, {{user.userName}}!</h1>
+   <div class="myhome-welcome" style="margin-bottom: 20px;">
+    <h1>Welcome, {{user.userName}}!</h1>
+    <h1>Your Balance <span id="user-balance">{{user.Balance}}</span></h1>
+</div>
+ <div class="add-balance-form">
+        <h2>Add Balance</h2>
+        <form action="/addBalance" method="post">
+            <label for="amount">Amount to Add:</label>
+            <input type="number" name="amount" id="amount" required>
+            <button type="submit">Add</button>
+        </form>
+    </div>
      
          
-    </div>
-    <div class="profile-container" style="margin-bottom: 22%;">
+
+    <div class="profile-container">
        
         <div class="usermodal" id="user-modal">
             <div class="myusermodal-content">
@@ -26,7 +28,10 @@
                     <p>User: {{user.userName}}!</p>
                     <p>Your email: {{user.email}}</p>
                    
-                     <a href="/changePassword">Change Password</a>
+                    
+                   <button id="show-password-modal" class="text-button" style="background: none; border: none;">Change Password</button>
+
+
                      <br>
                     <a href ="/Deleteaccount">Delete your account</a>
                 {{else}}
@@ -35,36 +40,90 @@
             </div>
         </div>
     </div>
-     
+<div class="popup">
+    <div class="close-btn" id="close-change-password">&times;</div>
+    <div class="form">
+        <h2>Change Password</h2>
+        {{#if error}}
+            <p class="error">{{error}}</p>
+        {{/if}}
+        <form class="form-element" action="/changePassword" method="POST">
+            <div class="form-element">
+                <label for="currentPassword">Current Password:</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="form-element">
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword" required>
+            </div>
+            <div class="form-element">
+                <label for="confirmnewPassword">Confirm New Password:</label>
+                <input type="password" id="confirmnewPassword" name="confirmnewPassword" required>
+            </div>
+            <div class="form-element">
+                <button type="submit">Confirm</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-{{!--    
-     {{>footer}} --}}
-   <script>
-        const openUserModalButton = document.getElementById('open-user-modal');
-        const userModal = document.getElementById('user-modal');
-        const closeUserModalButton = document.getElementById('close-user-modal');
-        let isUserModalOpen = false;
 
-        openUserModalButton.addEventListener('click', () => {
-            if (!isUserModalOpen) {
-                userModal.style.display = 'block';
-                isUserModalOpen = true;
-            } else {
-                userModal.style.display = 'none';
-                isUserModalOpen = false;
-            }
-        });
 
-        closeUserModalButton.addEventListener('click', () => {
-             if (!isUserModalOpen) {
-                userModal.style.display = 'block';
-                isUserModalOpen = true;
-            } else {
-                userModal.style.display = 'none';
-                isUserModalOpen = false;
-            }
-        });
+
+<script>
+  const userModal = document.getElementById('user-modal');
+const userModalButton = document.getElementById('open-user-modal');
+let isUserModalOpen = false;
+
+function isClickOutsideModal(event) {
+    return !userModal.contains(event.target) && event.target !== userModalButton;
+}
+
+userModalButton.addEventListener('click', () => {
+    if (!isUserModalOpen) {
+        userModal.style.display = 'block';
+        isUserModalOpen = true;
+
     
-    </script>
-</body>
-</html>
+        document.addEventListener('click', closeUserModalOnClickOutside);
+    } else {
+        userModal.style.display = 'none';
+        isUserModalOpen = false;
+
+        document.removeEventListener('click', closeUserModalOnClickOutside);
+    }
+});
+
+function closeUserModalOnClickOutside(event) {
+    if (isClickOutsideModal(event)) {
+        userModal.style.display = 'none';
+        isUserModalOpen = false;
+
+      
+        document.removeEventListener('click', closeUserModalOnClickOutside);
+    }
+}
+
+    
+    const changePasswordModal = document.querySelector(".popup");
+    const showPasswordModalButton = document.querySelector("#show-password-modal");
+    const closeChangePasswordModalButton = document.querySelector("#close-change-password");
+
+    showPasswordModalButton.addEventListener("click", function () {
+        if (!changePasswordModal.classList.contains("active")) {
+            changePasswordModal.classList.add("active");
+        }
+        
+        
+        if (isUserModalOpen) {
+            userModal.style.display = 'none';
+            isUserModalOpen = false;
+        }
+    });
+    
+    closeChangePasswordModalButton.addEventListener("click", function () {
+        if (changePasswordModal.classList.contains("active")) {
+            changePasswordModal.classList.remove("active");
+        }
+    });
+</script>
