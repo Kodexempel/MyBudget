@@ -1,22 +1,26 @@
 
     <div id="main">
+        
         {{> menu}}
+        
           <br>
     <br>
     </div>
    <div class="myhome-welcome" style="margin-bottom: 20px;">
     <h1>Welcome, {{user.userName}}!</h1>
-    <h1>Your Balance <span id="user-balance">{{user.Balance}}</span></h1>
+    <h1>Your Balance : <span id="user-balance">{{user.balance}}</span></h1>
+    
 </div>
- <div class="add-balance-form">
-        <h2>Add Balance</h2>
-        <form action="/addBalance" method="post">
-            <label for="amount">Amount to Add:</label>
-            <input type="number" name="amount" id="amount" required>
-            <button type="submit">Add</button>
-        </form>
-    </div>
-     
+ <!-- add-balance.handlebars -->
+<div class="add-balance-form">
+    <h2>Add Balance</h2>
+    <form action="/addBalance" method="post">
+        <label for="amount">Amount to Add:</label>
+        <input type="number" name="amount" id="amount" required>
+        <button type="submit">Add</button>
+    </form>
+</div>
+
          
 
     <div class="profile-container">

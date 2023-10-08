@@ -66,8 +66,8 @@ a{
     
     margin: 10px 10px 10px 10px;
     /* background: linear-gradient(to right, #2A9D8F, #0000); */
-    /* background :#282C34; */
-    /* background-color: #2A9D8F; */
+    background :#282C34;
+   
     padding: 20px;
     z-index: 1;
     text-align: center;
@@ -76,6 +76,7 @@ a{
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 
 }
+
 
 #menu a {
     display: block;
@@ -287,15 +288,32 @@ p{
     margin-left: 50%;
 }
 
-.myhome-welcome{
+/* .myhome-welcome {
     margin-left: 35%;
     font-size: 30px;
     margin-top: -30px;
-    color: #DEB992;
-    text-shadow: #1BA098;
+    color: transparent;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    animation: welcomeAnimation 5s ease-in-out infinite;
+    transform-origin: center;
+    background-image: linear-gradient(45deg, #FFD700, #FFA500, #FF6347);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+} */
+
+/* @keyframes welcomeAnimation {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+} */
 
 
-}
 .text-button{
     padding: 0;
     color: #ABB2BF;
@@ -374,15 +392,25 @@ img#open-user-modal {
 }
 
 
-.success-message {
+.success-message  {
     color: rgb(228, 8, 8); 
     padding: 10px 20px; 
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     border-radius: 5px; 
     text-align: center; 
     display: none; 
+    
 }
 
+.error-message {
+    color: rgb(228, 8, 8); /* Error message color */
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    display: none;
+    background-color: #1BA098;
+}
 
 
 table {
@@ -484,9 +512,10 @@ th, td {
         top: 60px;
         right: 0;
         width: 100%;
-        background: linear-gradient(to right, #2A9D8F, #0000);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
         text-align: center;
         z-index: 1;
+        background :#282C34;
     }
     .centered-text {
         
@@ -532,6 +561,32 @@ th, td {
         cursor: pointer;
         border-radius: 5px;
     }
+    .usermodal {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: auto; 
+        margin: 10px 10px 10px 10px;
+        font-size: 12px;
+       background :#282C34;
+        padding: 20px;
+        z-index: 1;
+        text-align: center;
+        border-radius: 10px;
+        margin: 50px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    }
+    #about img{
+        max-width: 100%;
+        height: 300px; 
+        display: block;
+        margin: 0 auto; 
+    }
+    #about{
+       font-size: 10px;
+    }
     
 }
 @media (max-width: 368px) {
@@ -566,3 +621,4 @@ th, td {
     
 
 }
+

@@ -37,32 +37,6 @@ app.get('/', (request, response) => {
 // app.get('/addBalance',(req,res) =>{
 //   res.render('/Home');
 // });
-app.post('/addBalance', (req, res) => {
-  const userId = req.session.userId;
-  if (!userId) {
-    res.redirect('/');
-    return;
-  }
-
-  const { amount } = req.body;
-
-  if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
-    res.render('Home.handlebars', { user: req.session.user, error: 'Invalid amount.' });
-                                        
-    return;
-  }
-
-  db.run('UPDATE users SET Balance = Balance + ? WHERE id = ?', [amount, userId], (err) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).send('An error occurred while adding balance.');
-    } else {
-      
-      res.render('Home.handlebars', { user: req.session.user, successMessage: 'Balance added successfully!' });
-                                             
-    }
-  });
-});
 
 
 app.get('/Home', (req, res) => {
@@ -377,6 +351,7 @@ app.get('/Purchase', (req, res) => {
     });
 });
 
+
 app.post('/AddPurchase', (req, res) => {
   const { PurchaseName, price, budget, category, purchaseDate } = req.body;
   const userId = req.session.userId;
@@ -386,53 +361,53 @@ app.post('/AddPurchase', (req, res) => {
     return;
   }
 
-  db.run(
-    'INSERT INTO purchases (PurchaseName, price, budgetId, categoryId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)',
-    [PurchaseName, price, budget, category, purchaseDate, userId],
-    (err) => {
-      if (err) {
-        console.error(err.message);
-        res.status(500).send('An error occurred while inserting the purchase.');
-      } else {
-       
-        res.redirect('/Purchase');
-      }
+
+  db.get('SELECT balance FROM users WHERE id = ?', [userId], (err, user) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('An error occurred while fetching user data.');
+      return;
     }
-  );
-});
 
+    if (!user) {
+      res.status(404).send('User not found.');
+      return;
+    }
 
-app.post('/AddPurchase', (req, res) => {
-  const { PurchaseName, price, budget, category, purchaseDate } = req.body;
-  const userId = req.session.userId;
+    const currentBalance = user.balance || 0;
+    const purchaseAmount = parseFloat(price);
 
-  if (!userId) {
-    res.redirect('/');
-    return;
-  }
+    if (currentBalance < purchaseAmount) {
+      
+      req.session.errorMessage = 'You do not have enough money for this purchase.';
+      res.redirect('/Purchase');
+    } else {
+     
+      const newBalance = currentBalance - purchaseAmount;
 
-  db.run(
-    'INSERT INTO purchases (PurchaseName, price, budgetId, categoryId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)',
-    [PurchaseName, price, budget, category, purchaseDate, userId],
-    (err) => {
-      if (err) {
-        console.error(err.message);
-        res.status(500).send('An error occurred while inserting the purchase.');
-      } else {
-       
-        db.all('SELECT * FROM purchases WHERE userId = ?', [userId], (err, rows) => {
-          if (err) {
-            console.error(err.message);
-            res.status(500).send('An error occurred while fetching purchases.');
+      db.run('INSERT INTO purchases (PurchaseName, price, budgetId, categoryId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', [PurchaseName, price, budget, category, purchaseDate, userId], (err) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).send('An error occurred while inserting the purchase.');
+          return;
+        }
+
+        
+        db.run('UPDATE users SET balance = ? WHERE id = ?', [newBalance, userId], (updateErr) => {
+          if (updateErr) {
+            console.error(updateErr.message);
+            res.status(500).send('Error updating balance.');
           } else {
-            req.session.successMessage = 'Item added successfully!';
-            res.render('Purchase.handlebars', { Purchases: rows });
+            
+            res.redirect('/Purchase');
           }
         });
-      }
+      });
     }
-  );
+  });
 });
+
+
 
 
 app.get('/changePassword', (req, res) => {
@@ -498,9 +473,7 @@ app.get('/Deleteaccount', (req, res) => {
   res.render('Deleteaccount.handlebars');
 });
 
-app.get('/deleteAccount', (req, res) => {
-  res.render('deleteAccount');
-});
+
 
 app.post('/deleteAccount', (req, res) => {
   const userId = req.session.userId;
@@ -527,6 +500,50 @@ app.post('/deleteAccount', (req, res) => {
       }
   });
 });
+// app.get('/addBalance', (req, res) => {
+//   res.render('addBalance');
+// });
+
+
+app.post('/addBalance', (req, res) => {
+  const amountToAdd = parseInt(req.body.amount); 
+  
+  if (isNaN(amountToAdd) || amountToAdd <= 0) {
+    res.status(400).send('Invalid amount');
+    return;
+  }
+
+  const userId = req.session.userId;
+
+  if (!userId) {
+    res.status(401).send('Unauthorized');
+    return;
+  }
+  console.log('User ID:', userId);
+  
+  db.get('SELECT balance FROM users WHERE id = ?', [userId], (err, user) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('An error occurred while fetching user data.');
+    } else if (user) {
+      console.log('User Data:', user);
+      const currentBalance = user.balance || 0;
+      const newBalance = currentBalance + amountToAdd;
+
+      db.run('UPDATE users SET Balance = ? WHERE id = ?', [newBalance, userId], (updateErr) => {
+        if (updateErr) {
+          console.error(updateErr.message);
+          res.status(500).send('Error updating balance.');
+        } else {
+          res.redirect('/Home');
+        }
+      });
+    } else {
+      res.status(404).send('User not found.');
+    }
+  });
+});
+
 
 
 app.get('/footer', (req, res) => {
