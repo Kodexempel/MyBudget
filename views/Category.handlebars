@@ -2,9 +2,9 @@
     {{> menu}}
     <br>
     <br>
-    {{#if successMessage}}
+    {{!-- {{#if successMessage}}
     <div class="success-message">{{successMessage}}</div>
-    {{/if}}
+    {{/if}} --}}
     <h1>Your Categories</h1>
     <div class="container">
         <div class="columns">
@@ -93,14 +93,6 @@
             });
         });
     });
-    document.addEventListener('DOMContentLoaded', () => {
-    const successMessageElement = document.querySelector('.success-message');
-
     
-    if (successMessageElement && successMessageElement.textContent.trim() !== '') {
-      
-        successMessageElement.style.display = 'block';
-    }
-});
 
 </script>

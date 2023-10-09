@@ -6,9 +6,17 @@
         <title>My page</title>
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
         <link rel="stylesheet" href="/css/styles-jl.css">
+       <script src="/Script/Message.js"></script>
+
+
+
      
     </head>
     <body>
+  {{#if successMessage}}
+  <div class="success-messages" id="success-message">{{successMessage}}</div>
+{{/if}}
+
         
          {{!-- {{> menu}}  --}}
         {{{body}}}

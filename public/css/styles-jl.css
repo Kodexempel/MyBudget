@@ -23,6 +23,9 @@ a{
     
    
 }
+body {
+    background-color: #282C34;
+}
 
 
 
@@ -93,7 +96,8 @@ a{
 }
 
 #menu a:hover {
-    background-color: #264653;
+    background-color: #ff9900;
+    color: #282C34;
     
 }
 
@@ -412,15 +416,19 @@ img#open-user-modal {
 }
 /* ///////////////////// */
 
-.success-message  {
-    color: rgb(228, 8, 8); 
-    padding: 10px 20px; 
-    margin-bottom: 0px;
-    border-radius: 5px; 
-    text-align: center; 
-    display: none; 
-    
-}
+.success-messages {
+    display: none;
+    background-color: #FF4136;
+   
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  
 
 .error-message {
     color: rgb(228, 8, 8); 

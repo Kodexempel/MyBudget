@@ -6,7 +6,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt'); 
 const saltRounds = 10; 
-const flash = require('express-flash');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('My_database.db');
@@ -16,7 +16,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
   }));
-  app.use(flash());
+
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
@@ -29,14 +29,11 @@ app.use(express.static('public'));
 app.get('/', (request, response) => {
     response.render('Login.handlebars');
   });
-  // app.get('/login', (request, response) => {
-  //   response.render('login');
-  // });
+//   app.get('/login', (request, response) => {
+//     response.render('login');
+//   });
 //   app.get('/signup', (request, response) => {
 //     response.render('signup');
-// });
-// app.get('/addBalance',(req,res) =>{
-//   res.render('/Home');
 // });
 
 
@@ -104,55 +101,53 @@ app.get('/Home', (req, res) => {
   
   
   
+  app.post('/signup', (req, res) => {
+    const { email, username, password, confirmPassword } = req.body;
   
-
-app.post('/signup', (req, res) => {
-  const { email, username, password, confirmPassword } = req.body;
-
-  if (password !== confirmPassword) {
-    res.render('login', { error: 'Passwords do not match.' });
-    return;
-  }
-
-  bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
-    if (err) {
-      console.error('Error hashing password:', err.message);
-      res.status(500).send('An error occurred while signing up.');
+    if (password !== confirmPassword) {
+      res.render('login', { error: 'Passwords do not match.' });
       return;
     }
-
-    db.get('SELECT * FROM users WHERE email = ?', [email], (err, existingUser) => {
+  
+    bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
       if (err) {
-        console.error('Error checking for existing user:', err.message);
-        res.status(500).send('An error occurred.');
-      } else if (existingUser) {
-        console.log('User with this email already exists:', email);
-        res.render('signup.handlebars', { error: 'Email already exists. Please log in.' });
-      } else {
-        db.run('INSERT INTO users (email, username, password) VALUES (?, ?, ?)', [email, username, hashedPassword], (err) => {
-          if (err) {
-            console.error('Error inserting new user:', err.message);
-            res.status(500).send('An error occurred while signing up.');
-          } else {
-            console.log('User signed up successfully:', email);
-
-            
-            db.get('SELECT id FROM users WHERE email = ?', [email], (err, user) => {
-              if (err) {
-                console.error('Error retrieving user ID:', err.message);
-                res.status(500).send('An error occurred.');
-              } else if (user) {
-                req.session.userId = user.id;
-                req.session.successMessage = 'Sign up successful! Wellcome to the application';
-                res.redirect('/Home');
-              }
-            });
-          }
-        });
+        console.error('Error hashing password:', err.message);
+        res.status(500).send('An error occurred while signing up.');
+        return;
       }
+  
+      db.get('SELECT * FROM users WHERE email = ?', [email], (err, existingUser) => {
+        if (err) {
+          console.error('Error checking for existing user:', err.message);
+          res.status(500).send('An error occurred.');
+        } else if (existingUser) {
+          console.log('User with this email already exists:', email);
+          res.render('Login', { error: 'Email already exists. Please log in.' }); 
+        } else {
+          db.run('INSERT INTO users (email, username, password) VALUES (?, ?, ?)', [email, username, hashedPassword], (err) => {
+            if (err) {
+              console.error('Error inserting new user:', err.message);
+              res.status(500).send('An error occurred while signing up.');
+            } else {
+              console.log('User signed up successfully:', email);
+  
+              db.get('SELECT id FROM users WHERE email = ?', [email], (err, user) => {
+                if (err) {
+                  console.error('Error retrieving user ID:', err.message);
+                  res.status(500).send('An error occurred.');
+                } else if (user) {
+                  req.session.userId = user.id;
+                  req.session.successMessage = 'Sign up successful! Welcome to the application';
+                  res.redirect('/Home');
+                }
+              });
+            }
+          });
+        }
+      });
     });
   });
-});
+  
 
 
 app.get('/logout', (req, res) => {
@@ -175,8 +170,8 @@ app.get('/Budget', (req, res) => {
           console.error(err.message);
           res.status(500).send('An error occurred.');
       } else {
-          const successMessage = req.flash('success'); 
-          res.render('Budget.handlebars', { budgets: rows, userId, successMessage });
+         
+          res.render('Budget.handlebars', { budgets: rows, userId});
       }
   });
 });
@@ -196,7 +191,7 @@ app.get('/Budget', (req, res) => {
                     console.error(err.message);
                     res.status(500).send('An error occurred.');
                 } else {
-                    req.flash('success', 'Your saving was added successfully!');
+                    
                     res.redirect('/Budget'); 
                 }
             });
@@ -263,7 +258,7 @@ app.post('/AddCategory', (req, res) => {
           console.error(err.message);
           res.status(500).send('An error occurred.');
         } else {
-          req.session.successMessage = 'Item added successfully!';
+         
           res.redirect('/Category');
         }
       });
@@ -310,7 +305,7 @@ app.get('/Purchase', (req, res) => {
 
   
   const MyBudgets = new Promise((resolve, reject) => {
-    db.all('SELECT * FROM budget', (err, budgetRows) => {
+    db.all('SELECT * FROM budget WHERE userId = ?', [userId], (err, budgetRows) => {
       if (err) {
         reject(err);
       } else {
@@ -320,7 +315,7 @@ app.get('/Purchase', (req, res) => {
   });
 
   const MyCategories = new Promise((resolve, reject) => {
-    db.all('SELECT * FROM categories', (err, categoryRows) => {
+    db.all('SELECT * FROM categories WHERE userId = ?', [userId], (err, categoryRows) => {
       if (err) {
         reject(err);
       } else {
@@ -331,12 +326,14 @@ app.get('/Purchase', (req, res) => {
 
   
   const MyPurchases = new Promise((resolve, reject) => {
-    db.all('SELECT * FROM purchases', (err, rows) => {
+    db.all('SELECT * FROM purchases WHERE userId = ?', [userId], (err, rows) => {
+      
       if (err) {
         reject(err);
       } else {
         resolve(rows);
       }
+    
     });
   });
 
@@ -409,6 +406,7 @@ app.post('/AddPurchase', (req, res) => {
     }
   });
 });
+
 
 
 
