@@ -57,13 +57,16 @@
                             <br>
                             <label for="budget">Select a Budget:</label>
                             <select id="budget" name="budget" required class="custom-select">
+                                <option> Select a budget </option>
                                 {{#each budgets}}
+                                
                                 <option value="{{id}}">{{budgetName}}</option>
                                 {{/each}}
                             </select>
                             <br>
                             <label for="category">Select a Category:</label>
                             <select id="category" name="category" required class="custom-select">
+                                <option> Select purchase category</option>
                                 {{#each categories}}
                                 <option value="{{id}}">{{categoryName}}</option>
                                 {{/each}}
@@ -78,7 +81,7 @@
                 </div>
                 </div>
        </div>
-    </div>
+       </div>
     </div>
                 <script>
                     const addPurchaseModal = document.querySelector("#add-purchase-modal");

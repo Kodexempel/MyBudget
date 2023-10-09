@@ -6,6 +6,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt'); 
 const saltRounds = 10; 
+const flash = require('express-flash');
 app.use(bodyParser.urlencoded({ extended: true }));
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('My_database.db');
@@ -15,11 +16,11 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
   }));
+  app.use(flash());
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 app.use(express.static('public'));
-
 
 
 
@@ -167,20 +168,22 @@ app.get('/logout', (req, res) => {
   });
 });
 
-app.get('/Budget', (request, response) => {
-    const userId = request.session.userId; 
-    db.all('SELECT * FROM budget WHERE userId = ?', [userId], (err, rows) => {
+app.get('/Budget', (req, res) => {
+  const userId = req.session.userId;
+  db.all('SELECT * FROM budget WHERE userId = ?', [userId], (err, rows) => {
       if (err) {
-        console.error(err.message);
-        response.status(500).send('An error occurred.');
+          console.error(err.message);
+          res.status(500).send('An error occurred.');
       } else {
-        response.render('Budget.handlebars', { budgets: rows, userId });
+          const successMessage = req.flash('success'); 
+          res.render('Budget.handlebars', { budgets: rows, userId, successMessage });
       }
-    });
   });
+});
+
   
   app.post('/AddBudget', (req, res) => {
-    const { budgetName, amount, budgetDate } = req.body; 
+    const { budgetName, amount, budgetDate } = req.body;
     const userId = req.session.userId;
 
     db.run('INSERT INTO budget (budgetName, amount, budgetDate, userId) VALUES (?, ?, ?, ?)', [budgetName, amount, budgetDate, userId], (err) => {
@@ -193,8 +196,8 @@ app.get('/Budget', (request, response) => {
                     console.error(err.message);
                     res.status(500).send('An error occurred.');
                 } else {
-                  req.session.successMessage = 'Your saving added successfully!';
-                    res.render('Budget.handlebars', { budgets: rows });
+                    req.flash('success', 'Your saving was added successfully!');
+                    res.redirect('/Budget'); 
                 }
             });
         }
@@ -261,7 +264,7 @@ app.post('/AddCategory', (req, res) => {
           res.status(500).send('An error occurred.');
         } else {
           req.session.successMessage = 'Item added successfully!';
-          res.render('Category.handlebars', { Categories: rows, successMessage: req.session.successMessage});
+          res.redirect('/Category');
         }
       });
     } 
@@ -469,8 +472,8 @@ app.post('/changePassword', (req, res) => {
     }
   });
 });
-app.get('/Deleteaccount', (req, res) => {
-  res.render('Deleteaccount.handlebars');
+app.get('/deleteaccount', (req, res) => {
+  res.render('deleteaccount');
 });
 
 

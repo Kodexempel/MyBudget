@@ -6,12 +6,12 @@
           <br>
     <br>
     </div>
-   <div class="myhome-welcome" style="margin-bottom: 20px;">
+   <div class="myhome-welcome">
     <h1>Welcome, {{user.userName}}!</h1>
     <h1>Your Balance : <span id="user-balance">{{user.balance}}</span></h1>
-    
+
 </div>
- <!-- add-balance.handlebars -->
+
 <div class="add-balance-form">
     <h2>Add Balance</h2>
     <form action="/addBalance" method="post">
@@ -20,6 +20,7 @@
         <button type="submit">Add</button>
     </form>
 </div>
+
 
          
 
@@ -37,7 +38,10 @@
 
 
                      <br>
-                    <a href ="/Deleteaccount">Delete your account</a>
+                 <form action="/deleteAccount" method="POST" id="delete-account-form">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="button" id="delete-account-button" class="text-button" style="background: none; border: none;">Delete Account</button>
+                    </form>
                 {{else}}
                     <p>No user data available.</p>
                 {{/if}}
@@ -71,7 +75,16 @@
     </div>
 </div>
 
-
+</div>
+<div id="confirmation-dialog">
+    <div id="confirmation-box">
+        <div id="confirmation-text">Are you sure you want to delete your account? You will lose your information</div>
+        <div id="confirmation-buttons">
+            <button id="confirm-button">Confirm</button>
+            <button id="cancel-button">Cancel</button>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -129,5 +142,21 @@ function closeUserModalOnClickOutside(event) {
         if (changePasswordModal.classList.contains("active")) {
             changePasswordModal.classList.remove("active");
         }
+    });
+ const deleteAccountButton = document.getElementById('delete-account-button');
+    const confirmationDialog = document.getElementById('confirmation-dialog');
+    const confirmButton = document.getElementById('confirm-button');
+    const cancelButton = document.getElementById('cancel-button');
+    
+    deleteAccountButton.addEventListener('click', function() {
+        confirmationDialog.style.display = 'block';
+    });
+
+    cancelButton.addEventListener('click', function() {
+        confirmationDialog.style.display = 'none';
+    });
+
+    confirmButton.addEventListener('click', function() {
+        document.getElementById('delete-account-form').submit();
     });
 </script>
