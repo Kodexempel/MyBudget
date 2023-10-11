@@ -16,8 +16,16 @@
   {{#if successMessage}}
   <div class="success-messages" id="success-message">{{successMessage}}</div>
 {{/if}}
-
-        
+{{#if errorMessage}}
+  <div class="errorMessage">
+    {{errorMessage}}
+  </div>
+{{/if}}
+{{!-- {{#if errorMessagelogin}}
+<div class="errorMessage">
+  {{errorMessagelogin}}
+</div>
+{{/if}} --}}
          {{!-- {{> menu}}  --}}
         {{{body}}}
         {{>footer}}

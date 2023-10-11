@@ -3,14 +3,14 @@
         {{> menu}}
         <br> 
         <br>
-     {{#if errorMessage}}
+     {{!-- {{#if errorMessage}}
     <div class="error-message">
         {{errorMessage}}
     </div>
     {{/if}}
      {{#if successMessage}}
     <div class="success-message">{{successMessage}}</div>
-    {{/if}}
+    {{/if}} --}}
       <h1>Your purchases :</h1>
  
        <div class="container">
@@ -42,7 +42,7 @@
             </table>
             </div>
     
-             <div class="column  col-xs-12 col-sm-6 col-lg-3 and col-xs-12 col-sm-6 col-lg-6 middle-container">
+             <div class="column  col-xs-12 col-sm-6 col-lg-3 and col-xs-12 col-sm-6 col-lg-6 right-container">
                 <button id="show-add-purchase">Add Purchase</button>
                 <div class="popup" id="add-purchase-modal">
                     <div class="close-btn" id="close-add-purchase">&times;</div>
@@ -57,7 +57,7 @@
                             <br>
                             <label for="budget">Select a Budget:</label>
                             <select id="budget" name="budget" required class="custom-select">
-                                <option> Select a budget </option>
+                              <option value="">Select a budget</option>
                                 {{#each budgets}}
                                 
                                 <option value="{{id}}">{{budgetName}}</option>
@@ -66,7 +66,7 @@
                             <br>
                             <label for="category">Select a Category:</label>
                             <select id="category" name="category" required class="custom-select">
-                                <option> Select purchase category</option>
+                                <option value=""> Select an category</option>
                                 {{#each categories}}
                                 <option value="{{id}}">{{categoryName}}</option>
                                 {{/each}}

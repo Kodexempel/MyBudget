@@ -36,9 +36,12 @@
                 <label for="login-email">Email</label>
                 <input type="text" id="login-email" name="email" placeholder="Enter email">
             </div>
-            <div class="form-element">
+          <div class="form-element password-input">
                 <label for="login-password">Password</label>
-                <input type="password" id="login-password" name="password" placeholder="Enter Password">
+                <div class="password-container">
+                    <input type="password" id="login-password" name="password" placeholder="Enter Password" class="password-field">
+                    <button type="button" id="show-password" class="password-toggle">👁️</button>
+                </div>
             </div>
             <div class="form-element">
                 <button>Sign In</button>
@@ -104,34 +107,56 @@
     }
 
     document.querySelector("#show-login").addEventListener("click", function () {
-        closeModal(signupModal); // Close signup modal
-        openModal(loginModal);   // Open login modal
+        closeModal(signupModal);
+        openModal(loginModal); 
     });
 
     document.querySelector("#close-login").addEventListener("click", function () {
-        closeModal(loginModal); // Close login modal
+        closeModal(loginModal); 
     });
 
     document.querySelector("#show-signup").addEventListener("click", function () {
-        closeModal(loginModal); // Close login modal
-        openModal(signupModal); // Open signup modal
+        closeModal(loginModal); 
+        openModal(signupModal); 
     });
 
     document.querySelector("#close-signup").addEventListener("click", function () {
-        closeModal(signupModal); // Close signup modal
+        closeModal(signupModal); 
     });
 
     document.querySelector("#Dont-have-account").addEventListener("click", function () {
-        closeModal(loginModal); // Close login modal
-        openModal(signupModal); // Open signup modal
+        closeModal(loginModal); 
+        openModal(signupModal); 
     });
 
     document.querySelector("#already-have-account").addEventListener("click", function () {
-        closeModal(signupModal); // Close signup modal
-        openModal(loginModal);   // Open login modal
+        closeModal(signupModal); 
+        openModal(loginModal);  
     });
-      {{!-- showSuccessMessage('Sign up successful! Welcome to the application', 5000); --}}
     
+    {{!-- document.getElementById('show-password').addEventListener('click', function () {
+    const passwordField = document.getElementById('login-password');
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        this.textContent = 'Hide Password';
+    } else {
+        passwordField.type = 'password';
+        this.textContent = 'Show Password';
+    }
+});
+
+     --}}
+     const passwordField = document.getElementById("login-password");
+const showPasswordButton = document.getElementById("show-password");
+
+showPasswordButton.addEventListener("click", function () {
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+    } else {
+        passwordField.type = "password";
+    }
+});
+
 </script>
 
 

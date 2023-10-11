@@ -27,14 +27,25 @@ app.use(express.static('public'));
 
 
 app.get('/', (request, response) => {
-    response.render('Login.handlebars');
-  });
-//   app.get('/login', (request, response) => {
-//     response.render('login');
-//   });
-//   app.get('/signup', (request, response) => {
-//     response.render('signup');
-// });
+  
+     response.render('Login.handlebars');
+});
+app.get('/login', (request, response) => {
+  const errorMessage = request.session.errorMessage;
+  request.session.errorMessage = null;
+
+  response.render('login', { errorMessage: errorMessage });
+});
+app.get('/signup', (request, response) => {
+  const errorMessage = request.session.errorMessage;
+  request.session.errorMessage = null;
+
+  response.render('signup', { errorMessage: errorMessage });
+});
+    
+    
+
+  
 
 
 app.get('/Home', (req, res) => {
@@ -85,16 +96,18 @@ app.get('/Home', (req, res) => {
           } else if (result) {
             console.log('Login successful for user:', user);
             req.session.userId = user.id;
-            // req.session.successMessage = 'Login successful! Welcome to the application.';
+           
             res.redirect('/Home');
           } else {
+            req.session.errorMessage = 'Wrong password try again';
             console.log('Invalid password for user:', user);
-            res.render('login', { error: 'Invalid email or password.' });
+            res.redirect('/login');
           }
         });
       } else {
         console.log('User not found for email:', email);
-        res.render('login', { error: 'Invalid email or password.' });
+        req.session.errorMessage = 'Invalid email or password.';
+        res.redirect('/login');
       }
     });
   });
@@ -122,7 +135,7 @@ app.get('/Home', (req, res) => {
           res.status(500).send('An error occurred.');
         } else if (existingUser) {
           console.log('User with this email already exists:', email);
-          res.render('Login', { error: 'Email already exists. Please log in.' }); 
+          res.render('Login', { errorMessage: 'Email already exists. Please log in.' }); 
         } else {
           db.run('INSERT INTO users (email, username, password) VALUES (?, ?, ?)', [email, username, hashedPassword], (err) => {
             if (err) {
@@ -297,6 +310,8 @@ app.post('/Category/:id/delete', (req, res) => {
 
 app.get('/Purchase', (req, res) => {
   const userId = req.session.userId;
+  const errorMessage = req.session.errorMessage;
+  req.session.errorMessage = null;
 
   if (!userId) {
     res.redirect('/');
@@ -343,6 +358,7 @@ app.get('/Purchase', (req, res) => {
         budgets: budgetRows,
         categories: categoryRows,
         Purchases: purchaseRows,
+        errorMessage: errorMessage,
       });
     })
     .catch((err) => {

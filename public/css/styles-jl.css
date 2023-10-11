@@ -430,15 +430,24 @@ img#open-user-modal {
   }
   
 
-.error-message {
-    color: rgb(228, 8, 8); 
-    padding: 10px 20px;
-    margin-bottom: 20px;
-    border-radius: 5px;
+  .errorMessage {
+    color: #FFFFFF; 
+    font-weight: bold;
     text-align: center;
-    display: none;
-    background-color: #1BA098;
-}
+    padding: 10px; 
+    background-color: #FF0000; 
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeOut 5s ease-in-out;
+    
+  }
+  
+  @keyframes fadeOut {
+    0% { opacity: 1; } 
+    90% { opacity: 1; } 
+    100% { opacity: 0; } 
+  }
+  
 /* Table and button */
 
 table {
@@ -730,4 +739,37 @@ footer.container {
     border-radius: 5px;
     color: #ABB2BF;
     background-color: #264653; 
+}
+@media (max-width: 960px) {
+    .col-lg-6 {
+        width: 100%;
+    }
+}
+
+
+
+.password-container {
+    position: relative;
+}
+
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-size: 1.2rem;
+    user-select: none;
+}
+
+/* Hide the password input by default */
+.password-field[type="password"] {
+    padding-right: 20px; 
+}
+
+.password-field.show-password[type="text"] {
+    padding-right: 20px; 
 }
