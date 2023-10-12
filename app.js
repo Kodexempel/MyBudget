@@ -27,29 +27,32 @@ app.use(express.static('public'));
 
 
 app.get('/', (request, response) => {
-  
-     response.render('Login.handlebars');
+   const errorMessage = request.session.errorMessage;
+   const successMessage = request.session.successMessage;
+  request.session.errorMessage = null;
+  request.session.successMessage = null; 
+
+  response.render('Login.handlebars', { errorMessage: errorMessage , successMessage: successMessage});
 });
+
 app.get('/login', (request, response) => {
   const errorMessage = request.session.errorMessage;
   request.session.errorMessage = null;
 
   response.render('login', { errorMessage: errorMessage });
 });
-app.get('/signup', (request, response) => {
-  const errorMessage = request.session.errorMessage;
-  request.session.errorMessage = null;
-
-  response.render('signup', { errorMessage: errorMessage });
-});
-    
-    
 
   
 
 
 app.get('/Home', (req, res) => {
   const userId = req.session.userId;
+  const successMessage = req.session.successMessage;
+  const errorMessage = req.session.error;
+  req.session.errorMessage= null;
+  
+  req.session.successMessage = null; 
+
   if (!userId) {
     res.redirect('/');
     return;
@@ -60,7 +63,7 @@ app.get('/Home', (req, res) => {
       console.error(err.message);
       res.status(500).send('An error occurred while fetching user data.');
     } else if (user) {
-      res.render('Home.handlebars', { user });
+      res.render('Home.handlebars', { user ,  successMessage :successMessage,errorMessage :errorMessage });
     } else {
       res.status(404).send('User not found.');
     }
@@ -70,11 +73,11 @@ app.get('/Home', (req, res) => {
 
 
 
-  app.get('/About', (request, response) => {
-    response.render('About.handlebars');
+  app.get('/About', (req, res) => {
+    res.render('About.handlebars');
   });
-  app.get('/Contact', (request, response) => {
-    response.render('Contact.handlebars');
+  app.get('/Contact', (req, res) => {
+    res.render('Contact.handlebars');
   });
   app.post('/login', (req, res) => {
     const { email, password } = req.body;
@@ -96,7 +99,7 @@ app.get('/Home', (req, res) => {
           } else if (result) {
             console.log('Login successful for user:', user);
             req.session.userId = user.id;
-           
+            req.session.successMessage= 'Login successful welcome';
             res.redirect('/Home');
           } else {
             req.session.errorMessage = 'Wrong password try again';
@@ -118,7 +121,9 @@ app.get('/Home', (req, res) => {
     const { email, username, password, confirmPassword } = req.body;
   
     if (password !== confirmPassword) {
-      res.render('login', { error: 'Passwords do not match.' });
+      req.session.errorMessage = 'passwords do not match';
+      res.redirect('/login');
+      
       return;
     }
   
@@ -129,13 +134,14 @@ app.get('/Home', (req, res) => {
         return;
       }
   
-      db.get('SELECT * FROM users WHERE email = ?', [email], (err, existingUser) => {
+      db.get('SELECT * FROM users WHERE email = ?', [email], (err, foundUser) => {
         if (err) {
           console.error('Error checking for existing user:', err.message);
           res.status(500).send('An error occurred.');
-        } else if (existingUser) {
+        } else if (foundUser) {
           console.log('User with this email already exists:', email);
-          res.render('Login', { errorMessage: 'Email already exists. Please log in.' }); 
+          req.session.errorMessage = 'Email already exists. Please log in.';
+          res.redirect('/login'); 
         } else {
           db.run('INSERT INTO users (email, username, password) VALUES (?, ?, ?)', [email, username, hashedPassword], (err) => {
             if (err) {
@@ -150,7 +156,7 @@ app.get('/Home', (req, res) => {
                   res.status(500).send('An error occurred.');
                 } else if (user) {
                   req.session.userId = user.id;
-                  req.session.successMessage = 'Sign up successful! Welcome to the application';
+                  req.session.successMessage = 'Sign up successful! Welcome to the application please login ';
                   res.redirect('/Home');
                 }
               });
@@ -178,13 +184,15 @@ app.get('/logout', (req, res) => {
 
 app.get('/Budget', (req, res) => {
   const userId = req.session.userId;
+  const successMessage = req.session.successMessage;
+  req.session.successMessage = null; 
   db.all('SELECT * FROM budget WHERE userId = ?', [userId], (err, rows) => {
       if (err) {
           console.error(err.message);
           res.status(500).send('An error occurred.');
       } else {
-         
-          res.render('Budget.handlebars', { budgets: rows, userId});
+        
+          res.render('Budget.handlebars', { budgets: rows, userId  ,successMessage : successMessage});
       }
   });
 });
@@ -204,7 +212,7 @@ app.get('/Budget', (req, res) => {
                     console.error(err.message);
                     res.status(500).send('An error occurred.');
                 } else {
-                    
+                    req.session.successMessage = "item added successfully!"
                     res.redirect('/Budget'); 
                 }
             });
@@ -223,6 +231,7 @@ app.get('/Budget', (req, res) => {
             res.status(500).send('An error occurred.');
         } else {
             console.log('Deleted budget with ID:', budgetId); 
+            req.session.successMessage = 'item deleted successfully! ';
             res.redirect('/Budget');
         }
     });
@@ -238,6 +247,7 @@ app.post('/editBudget/:id', (req, res) => {
           console.error(err.message);
           res.status(500).send('An error occurred.');
       } else {
+        req.session.successMessage = 'item updeted successfully!';
           res.redirect('/Budget');
       }
   });
@@ -246,12 +256,13 @@ app.post('/editBudget/:id', (req, res) => {
 
 app.get('/Category', (req, res) => {
   const userId = req.session.userId;
+  const successMessage = req.session.successMessage
   db.all('SELECT * FROM Categories WHERE userId = ?', [userId], (err, rows) => {
     if (err) {
       console.error(err.message);
       res.status(500).send('An error occurred.');
     } else {
-      res.render('Category.handlebars', { Categories: rows, userId, successMessage: req.session.successMessage });
+      res.render('Category.handlebars', { Categories: rows, userId, successMessage : successMessage });
     }
   });
 });
@@ -271,6 +282,7 @@ app.post('/AddCategory', (req, res) => {
           console.error(err.message);
           res.status(500).send('An error occurred.');
         } else {
+          req.session.successMessage = 'item added successfully!';
          
           res.redirect('/Category');
         }
@@ -288,6 +300,7 @@ app.post('/editCategory/:id', (req, res) => {
           console.error(err.message);
           res.status(500).send('An error occurred.');
       } else {
+        req.session.successMessage = 'item updated successfully!';
           res.redirect('/Category');
       }
   });
@@ -300,7 +313,7 @@ app.post('/Category/:id/delete', (req, res) => {
           console.error(err.message);
           res.status(500).send('An error occurred.');
       } else {
-        
+        req.session.successMessage = 'item deleted successfully!';
           res.redirect('/Category');
       }
   });
@@ -311,6 +324,8 @@ app.post('/Category/:id/delete', (req, res) => {
 app.get('/Purchase', (req, res) => {
   const userId = req.session.userId;
   const errorMessage = req.session.errorMessage;
+  const successMessage = req.session.successMessage;
+  req.session.successMessage= null;
   req.session.errorMessage = null;
 
   if (!userId) {
@@ -359,6 +374,7 @@ app.get('/Purchase', (req, res) => {
         categories: categoryRows,
         Purchases: purchaseRows,
         errorMessage: errorMessage,
+        successMessage : successMessage
       });
     })
     .catch((err) => {
@@ -414,7 +430,7 @@ app.post('/AddPurchase', (req, res) => {
             console.error(updateErr.message);
             res.status(500).send('Error updating balance.');
           } else {
-            
+            req.session.successMessage = 'item added succsessfully!';
             res.redirect('/Purchase');
           }
         });
@@ -427,9 +443,6 @@ app.post('/AddPurchase', (req, res) => {
 
 
 
-app.get('/changePassword', (req, res) => {
-  res.render('changePassword');
-});
 
 app.post('/changePassword', (req, res) => {
   const userId = req.session.userId;
@@ -444,8 +457,8 @@ app.post('/changePassword', (req, res) => {
       res.redirect('/');
     } else {
      
-      console.log('Input Current Password:', currentPassword);
-      console.log('Stored Password:', user.password);
+      console.log('the Current Password:', currentPassword);
+      console.log(' Password:', user.password);
 
     
       bcrypt.compare(currentPassword, user.password, (bcryptErr, result) => {
@@ -453,15 +466,15 @@ app.post('/changePassword', (req, res) => {
           console.error('Error comparing passwords:', bcryptErr.message);
           res.status(500).send('An error occurred.');
         } else {
-          console.log('Password Comparison Result:', result);
+          console.log('Password Compare Result:', result);
 
          
           if (result) {
             if (newPassword === confirmnewPassword) {
               
-              bcrypt.hash(newPassword, saltRounds, (hashErr, hashedPassword) => {
-                if (hashErr) {
-                  console.error('Error hashing new password:', hashErr.message);
+              bcrypt.hash(newPassword, saltRounds, (errhash, hashedPassword) => {
+                if (errhash) {
+                  console.error('Error hashing new password:', errhash.message);
                   res.status(500).send('An error occurred.');
                 } else {
                   
@@ -470,16 +483,19 @@ app.post('/changePassword', (req, res) => {
                       console.error('Error updating password:', updateErr.message);
                       res.status(500).send('An error occurred.');
                     } else {
+                      req.session.successMessage = 'password changed succsessfully!';
                       res.redirect('/Home');
                     }
                   });
                 }
               });
             } else {
-              res.render('Home.handlebars', { error: 'New password and confirmation do not match.' });
+             req.session.errorMessage ='New password and confirmation do not match.';
+              res.redirect('/Home');
             }
           } else {
-            res.render('Home.handlebars', { error: 'Current password is incorrect.' });
+            req.session.errorMessage = 'wrong password try again';
+            res.redirect('/Home');
           }
         }
       });
@@ -511,15 +527,12 @@ app.post('/deleteAccount', (req, res) => {
                   console.error('Error destroying session:', sessionErr.message);
               }
 
-             
+              
               res.redirect('/'); 
           });
       }
   });
 });
-// app.get('/addBalance', (req, res) => {
-//   res.render('addBalance');
-// });
 
 
 app.post('/addBalance', (req, res) => {
@@ -552,6 +565,7 @@ app.post('/addBalance', (req, res) => {
           console.error(updateErr.message);
           res.status(500).send('Error updating balance.');
         } else {
+          req.session.successMessage = 'your balance are updated';
           res.redirect('/Home');
         }
       });

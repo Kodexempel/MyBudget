@@ -115,7 +115,7 @@ a:visited {
 
 
 
-    /* /* My login Css */
+ /* /* My login Css and modals */
         .center {
             position: absolute;
             top: 50%;
@@ -362,7 +362,7 @@ img#open-user-modal {
     width: 300px;
     height: auto;
     margin: 10px 10px 10px 10px;
-    /* background: linear-gradient(to right, #2A9D8F, #0000); */
+    
    background :#282C34;
     padding: 20px;
     z-index: 1;
@@ -414,19 +414,17 @@ img#open-user-modal {
     font-size: 14px;
     color: #ABB2BF;
 }
-/* ///////////////////// */
+/* ///////////////////// my messages */
 
 .success-messages {
-    display: none;
-    background-color: #FF4136;
-   
+    color: #FF4136; 
+    font-weight: bold;
     text-align: center;
-    padding: 10px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
+    padding: 10px; 
+    background-color: #264653; 
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeOut 5s ease-in-out;
   }
   
 
@@ -559,7 +557,7 @@ footer.container {
 .h3 {
     color: #ff9900; 
 }
-/* ///////////////////////////////////////////////////////// */
+/* ///////////////////////////////////////////////////////// my screen media */
 
   @media (max-width: 768px) {
     #toggle-menu {
@@ -698,55 +696,14 @@ footer.container {
 
 }
 
-/* My messages */
-#confirmation-dialog {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    text-align: center;
-    font-size: 18px;
-    color: #ABB2BF;
-}
 
-/* Style the confirmation box */
-#confirmation-box {
-    background :#282C34;
-    padding: 20px;
-    border-radius: 5px;
-    width: 300px;
-    margin: 100px auto;
-}
-
-/* Style the confirmation text */
-#confirmation-text {
-    margin-bottom: 20px;
-}
-
-/* Style the buttons */
-#confirmation-buttons {
-    text-align: center;
-}
-
-#confirm-button, #cancel-button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    color: #ABB2BF;
-    background-color: #264653; 
-}
 @media (max-width: 960px) {
     .col-lg-6 {
         width: 100%;
     }
 }
 
-
+/* show password */
 
 .password-container {
     position: relative;
@@ -763,13 +720,32 @@ footer.container {
     background: transparent;
     font-size: 1.2rem;
     user-select: none;
+    background-color: none;
 }
 
-/* Hide the password input by default */
+
 .password-field[type="password"] {
     padding-right: 20px; 
 }
 
 .password-field.show-password[type="text"] {
     padding-right: 20px; 
+    /* font-size: 2px;
+    color: #222; */
+
+}
+#show-password{
+    background-color: none;
+    font-size: 12px;
+    border: none;
+    color: #282C34;
+    text-align: right;
+
+}
+#show-password:hover {
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: #282C34;
+    margin-left: 4px;
 }

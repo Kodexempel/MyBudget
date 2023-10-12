@@ -3,8 +3,9 @@ db.serialize(() => {
   db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, email TEXT, userName TEXT, password TEXT, balance REAL)');
 
   // Insert data into the "users" table including the "balance" column
-  db.run('INSERT INTO users (email, userName, password, balance) VALUES (?, ?, ?, ?)', ['omer1@gmail.com', 'Omer', '123', 100.0]);
-  db.run('INSERT INTO users (email, userName, password, balance) VALUES (?, ?, ?, ?)', ['jerome@gmail.com', 'Jerome', '123', 200.0]);
+  //'hashed password for 123 so you can log in '
+  db.run('INSERT INTO users (email, userName, password, balance) VALUES (?, ?, ?, ?)', ['omer1@gmail.com', 'Omer', '$2b$10$q3uPbkX5CZnO35W1WlgMRO3lCzQsorNKtmr0VuKZxXxM5wrii.X72', 100.0]);
+  db.run('INSERT INTO users (email, userName, password, balance) VALUES (?, ?, ?, ?)', ['jerome@gmail.com', 'Jerome', '$2b$10$q3uPbkX5CZnO35W1WlgMRO3lCzQsorNKtmr0VuKZxXxM5wrii.X72', 200.0]);
 
   // Retrieve and display user data including the "balance" column
   db.each('SELECT * FROM users', (err, row) => {

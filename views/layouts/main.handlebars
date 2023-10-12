@@ -6,7 +6,7 @@
         <title>My page</title>
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
         <link rel="stylesheet" href="/css/styles-jl.css">
-       <script src="/Script/Message.js"></script>
+      
 
 
 
@@ -14,18 +14,15 @@
     </head>
     <body>
   {{#if successMessage}}
-  <div class="success-messages" id="success-message">{{successMessage}}</div>
+  <div class="success-messages">
+    {{successMessage}}</div>
 {{/if}}
 {{#if errorMessage}}
   <div class="errorMessage">
     {{errorMessage}}
   </div>
 {{/if}}
-{{!-- {{#if errorMessagelogin}}
-<div class="errorMessage">
-  {{errorMessagelogin}}
-</div>
-{{/if}} --}}
+
          {{!-- {{> menu}}  --}}
         {{{body}}}
         {{>footer}}
