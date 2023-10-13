@@ -1,6 +1,6 @@
 const express = require('express');
 const { engine } = require('express-handlebars');
-const port = 1010;
+const port = 1024;
 const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -16,7 +16,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
   }));
+  
 
+
+  
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
@@ -32,14 +35,14 @@ app.get('/', (request, response) => {
   request.session.errorMessage = null;
   request.session.successMessage = null; 
 
-  response.render('Login.handlebars', { errorMessage: errorMessage , successMessage: successMessage});
+  response.render('Login.handlebars',  { errorMessage: errorMessage , successMessage: successMessage});
 });
 
 app.get('/login', (request, response) => {
   const errorMessage = request.session.errorMessage;
   request.session.errorMessage = null;
 
-  response.render('login', { errorMessage: errorMessage });
+  response.render('login',  { errorMessage: errorMessage });
 });
 
   
@@ -91,7 +94,6 @@ app.get('/Home', (req, res) => {
       } else if (user) {
         console.log('User found:', user);
   
-       
         bcrypt.compare(password, user.password, (bcryptErr, result) => {
           if (bcryptErr) {
             console.error('Error comparing passwords:', bcryptErr.message);
@@ -99,10 +101,17 @@ app.get('/Home', (req, res) => {
           } else if (result) {
             console.log('Login successful for user:', user);
             req.session.userId = user.id;
-            req.session.successMessage= 'Login successful welcome';
-            res.redirect('/Home');
+  
+            // Check if the user is an admin
+            if (user.isAdmin) {
+              req.session.successMessage = 'Admin login successful';
+              res.redirect('/admin');
+            } else {
+              req.session.successMessage = 'User login successful';
+              res.redirect('/Home');
+            }
           } else {
-            req.session.errorMessage = 'Wrong password try again';
+            req.session.errorMessage = 'Wrong password, please try again';
             console.log('Invalid password for user:', user);
             res.redirect('/login');
           }
@@ -114,6 +123,7 @@ app.get('/Home', (req, res) => {
       }
     });
   });
+  
   
   
   
@@ -186,6 +196,10 @@ app.get('/Budget', (req, res) => {
   const userId = req.session.userId;
   const successMessage = req.session.successMessage;
   req.session.successMessage = null; 
+  if (!userId) {
+    res.redirect('/');
+    return;
+  }
   db.all('SELECT * FROM budget WHERE userId = ?', [userId], (err, rows) => {
       if (err) {
           console.error(err.message);
@@ -257,6 +271,10 @@ app.post('/editBudget/:id', (req, res) => {
 app.get('/Category', (req, res) => {
   const userId = req.session.userId;
   const successMessage = req.session.successMessage
+  if (!userId) {
+    res.redirect('/');
+    return;
+  }
   db.all('SELECT * FROM Categories WHERE userId = ?', [userId], (err, rows) => {
     if (err) {
       console.error(err.message);
@@ -305,6 +323,20 @@ app.post('/editCategory/:id', (req, res) => {
       }
   });
 });
+app.post("/admin/edit/category/{{category.id}}", (req, res) => {
+  const categoryId = req.params.id;
+  const editedCategoryName = req.body.editedCategoryName;
+  req.session.successMessage="this is edited category";
+  db.run('UPDATE Categories SET CategoryName = ? WHERE id = ?', [editedCategoryName, categoryId], (err) => {
+      if (err) {
+          console.error(err.message);
+          res.status(500).send('An error occurred.');
+      } else {
+        req.session.successMessage = 'item updated successfully!';
+          res.redirect('/admin');
+      }
+  });
+});
 app.post('/Category/:id/delete', (req, res) => {
   const categoryId = req.params.id;
 
@@ -315,6 +347,24 @@ app.post('/Category/:id/delete', (req, res) => {
       } else {
         req.session.successMessage = 'item deleted successfully!';
           res.redirect('/Category');
+      }
+  });
+});
+
+
+app.post('/admin/edit/budget/{{budget.id}}', (req, res) => {
+  console.log("Budget update")
+  const budgetId = req.params.id;
+  const editedBudgetName = req.body.editedBudgetName;
+  const editedAmount = req.body.editedAmount;
+
+  db.run('UPDATE budget SET budgetName = ?, amount = ? WHERE id = ?', [editedBudgetName, editedAmount, budgetId], (err) => {
+      if (err) {
+          console.error(err.message);
+          res.status(500).send('An error occurred.');
+      } else {
+        req.session.successMessage = 'item updeted successfully!';
+          res.redirect('/admint');
       }
   });
 });
@@ -580,6 +630,124 @@ app.post('/addBalance', (req, res) => {
 app.get('/footer', (req, res) => {
   res.render('footer.handlebars');
 });
+
+app.get('/admin', (req, res) => {
+  const userId = req.session.userId;
+
+  if (!userId) {
+    res.redirect('/');
+    return;
+  }
+
+  db.get('SELECT * FROM users WHERE id = ?', [userId], (err, user) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('An error occurred while fetching user data.');
+    } else if (user) {
+      if (user.isAdmin) {
+        // Fetch information about all users, their purchases, budgets, categories, and balances
+        db.all('SELECT u.*, b.budgetName, b.amount AS budgetAmount, c.CategoryName, p.PurchaseName, p.price, p.purchaseDate ' +
+               'FROM users u ' +
+               'LEFT JOIN budget b ON u.id = b.userId ' +
+               'LEFT JOIN Categories c ON u.id = c.userId ' +
+               'LEFT JOIN purchases p ON u.id = p.userId', (err, users) => {
+          if (err) {
+            console.error(err.message);
+            res.status(500).send('An error occurred while fetching user data.');
+          } else {
+            res.render('admin.handlebars', { users });
+          }
+        });
+      } else {
+        res.redirect('/Home');
+      }
+    } else {
+      res.status(404).send('User not found.');
+    }
+  });
+});
+
+// // Edit user route
+// app.post('/admin/edit/:id', (req, res) => {
+//   const userId = req.params.id;
+
+//   // Fetch user data by ID (you can use a database query)
+//   db.get('SELECT * FROM users WHERE id = ?', [userId], (err, user) => {
+//       if (err) {
+//           console.error(err.message);
+//           res.status(500).send('An error occurred while fetching user data.');
+//           return;
+//       }
+
+//       if (!user) {
+//           res.status(404).send('User not found.');
+//           return;
+//       }
+
+//       // Render an edit form with user data
+//       res.redirect('/admin', { user });
+//   });
+// });
+
+// Update user route
+// app.post('/admin/edit/:id', (req, res) => {
+//   const userId = req.params.id;
+//   const { email, username, isAdmin } = req.body;
+
+//   // Update the user's information in the database
+//   db.run('UPDATE users SET email = ?, username = ?, isAdmin = ? WHERE id = ?', [email, username, isAdmin, userId], (err) => {
+//       if (err) {
+//           console.error(err.message);
+//           res.status(500).send('An error occurred while updating user data.');
+//           return;
+//       }
+
+      
+//       res.redirect('/admin');
+//   });
+// });
+// Delete a user's purchases
+// app.post('/admin/delete/purchases/:userId', (req, res) => {
+//   const userId = req.params.userId;
+
+//   db.run('DELETE FROM purchases WHERE userId = ?', [userId], (err) => {
+//     if (err) {
+//       console.error(err.message);
+//       res.status(500).send('An error occurred while deleting the purchases.');
+//     } else {
+//       res.redirect('/admin');
+//     }
+//   });
+// });
+
+// Delete a user's categories
+// app.post('/admin/delete/categories/:userId', (req, res) => {
+//   const userId = req.params.userId;
+
+//   db.run('DELETE FROM categories WHERE userId = ?', [userId], (err) => {
+//     if (err) {
+//       console.error(err.message);
+//       res.status(500).send('An error occurred while deleting the categories.');
+//     } else {
+//       res.redirect('/admin');
+//     }
+//   });
+// });
+
+// // Delete a user's budgets
+// app.post('/admin/delete/budgets/:userId', (req, res) => {
+//   const userId = req.params.userId;
+
+//   db.run('DELETE FROM budget WHERE userId = ?', [userId], (err) => {
+//     if (err) {
+//       console.error(err.message);
+//       res.status(500).send('An error occurred while deleting the budgets.');
+//     } else {
+//       res.redirect('/admin');
+//     }
+//   });
+// });
+
 
 app.use((req, res) => {
   res.status(404).render('404.handlebars');

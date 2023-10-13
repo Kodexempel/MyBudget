@@ -1,0 +1,114 @@
+<!-- Inside the admin.handlebars view -->
+<!-- Existing code for displaying user data -->
+<h1>Admin Panel</h1>
+<table>
+  <!-- Table header -->
+  <tr>
+    <th>User ID</th>
+    <th>Email</th>
+    <th>Username</th>
+    <th>Admin</th>
+    <th>Budget</th>
+    <th>Amount</th>
+    <th>Category</th>
+    <th>Purchase Name</th>
+    <th>Purchase Price</th>
+    <th>Purchase Date</th>
+    <th>Actions</th>
+  </tr>
+  <!-- Loop through users -->
+  {{#each users}}
+  <tr>
+    <!-- User data -->
+    <td>{{id}}</td>
+    <td>{{email}}</td>
+    <td>{{userName}}</td>
+    <td>{{#if isAdmin}}Yes{{else}}No{{/if}}</td>
+    <!-- Budget, Category, and Purchase data -->
+    <td>{{budgetName}}</td>
+    <td>{{budgetAmount}}</td>
+    <td>{{categoryName}}</td>
+    <td>{{PurchaseName}}</td>
+    <td>{{price}}</td>
+    <td>{{purchaseDate}}</td>
+  
+    <td>
+     
+      <button class="edit-btn" id="editBudgetButton{{id}}">Edit Budget</button>
+      <button class="edit-category-btn" id="editCategoryButton{{id}}">Edit Category</button>
+      
+    </td>
+  </tr>
+  {{/each}}
+</table>
+
+
+<div class="popup" id="editBudgetModal{{id}}">
+  <div class="close-btn" id="closeEditBudgetModal{{id}}">&times;</div>
+  <div class="form">
+    <h2>Edit Budget</h2>
+    <form class="form-element" method="POST" action="/admin/edit/budget/{{budget.id}}">
+      <label for="editedBudgetName">New Budget Name</label>
+      <input type="text" id="editedBudgetName{{id}}" name="editedBudgetName" placeholder="Enter new budget name" required>
+      <br>
+      <label for "editedAmount">New Amount</label>
+      <input type="number" id="editedAmount{{id}}" name="editedAmount" placeholder="Enter new amount" required>
+      <br>
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>
+
+<div class="popup" id="editCategoryModal{{id}}">
+  <div class="close-btn" id="closeEditCategoryModal{{id}}">&times;</div>
+  <div class="form">
+    <h2>Edit Category</h2>
+    <form class="form-element" method="POST" action="/admin/edit/category/{{category.id}}">
+      <label for="editedCategoryName">New Category Name</label>
+      <input type="text" id="editedCategoryName{{id}}" name="editedCategoryName" placeholder="Enter new category name" required>
+      <br>
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Function to open the modal
+  function openModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "block";
+  }
+
+  // Function to close the modal
+  function closeModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "none";
+  }
+
+  // Event listener for opening modals based on the clicked button
+  document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("edit-btn")) {
+      // Extract the unique identifier from the clicked button
+      var id = e.target.id.replace("editBudgetButton", "");
+      openModal("editBudgetModal" + id);
+    }
+
+    if (e.target.id.startsWith("closeEditBudgetModal")) {
+      // Extract the unique identifier from the clicked close button
+      var id = e.target.id.replace("closeEditBudgetModal", "");
+      closeModal("editBudgetModal" + id);
+    }
+
+    // Add similar logic for the "Edit Category" modal
+    if (e.target.classList.contains("edit-category-btn")) {
+      var id = e.target.id.replace("editCategoryButton", "");
+      openModal("editCategoryModal" + id);
+    }
+
+    if (e.target.id.startsWith("closeEditCategoryModal")) {
+      // Extract the unique identifier from the clicked close button
+      var id = e.target.id.replace("closeEditCategoryModal", "");
+      closeModal("editCategoryModal" + id);
+    }
+  });
+</script>

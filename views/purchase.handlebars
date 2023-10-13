@@ -19,7 +19,7 @@
                         <th>Purchase Date</th>
                         
                     </tr>
-                    
+           
                 </thead>
             
                 <tbody>
@@ -28,12 +28,14 @@
                         <td>{{PurchaseName}}</td>
                         <td>{{price}}</td>
                         <td>{{purchaseDate}}</td>
+                        <td><a href="javascript:void(0);" class="more-details-btn" data-target="purchaseDetailsModal{{id}}">More Details</a></td>
                     </tr>
                     
                     {{/each}}
                 </tbody>
             </table>
             </div>
+
     
              <div class="column  col-xs-12 col-sm-6 col-lg-3 and col-xs-12 col-sm-6 col-lg-6 right-container">
                 <button id="show-add-purchase">Add Purchase</button>
@@ -75,7 +77,32 @@
                 </div>
        </div>
        </div>
+          
+                 {{#each Purchases}}
+            <div class="popup" id="purchaseDetailsModal{{id}}">
+                <div class="close-btn" id="closePurchaseDetails{{id}}">&times;</div>
+                <div class="form">
+                    <h2>Purchase Details</h2>
+                    <p>Purchase Name: {{PurchaseName}}</p>
+                    <p>Price (SEK): {{price}}</p>
+                    <p>Purchase Date: {{purchaseDate}}</p>
+                      
+             
+        <p>Budget: {{budgetId}}</p>
+    
+        
+     
+        <p>Category: {{categoryId}}</p>
+   
+                
+                </div>
+            </div>
+            {{/each}}
+        </div>
     </div>
+</div>
+
+
                 <script>
                     const addPurchaseModal = document.querySelector("#add-purchase-modal");
                     const showAddPurchaseButton = document.querySelector("#show-add-purchase");
@@ -88,5 +115,26 @@
                     closeAddPurchaseButton.addEventListener("click", function () {
                         addPurchaseModal.classList.remove("active");
                     });
+                    document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("more-details-btn")) {
+    
+        const modalId = e.target.getAttribute("data-target");
+        const modal = document.getElementById(modalId);
+
+        if (modal) {
+            modal.classList.add("active");
+        }
+    }
+
+    if (e.target.id.startsWith("closePurchaseDetails")) {
+        const modalId = e.target.id.replace("closePurchaseDetails", "");
+        const modal = document.getElementById("purchaseDetailsModal" + modalId);
+
+        if (modal) {
+            modal.classList.remove("active");
+        }
+    }
+});
+
                 </script>
          
