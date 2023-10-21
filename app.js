@@ -102,7 +102,7 @@ app.get('/Home', (req, res) => {
             console.log('Login successful for user:', user);
             req.session.userId = user.id;
   
-            // Check if the user is an admin
+        
             if (user.isAdmin) {
               req.session.successMessage = 'Admin login successful';
               res.redirect('/admin');
@@ -196,20 +196,66 @@ app.get('/Budget', (req, res) => {
   const userId = req.session.userId;
   const successMessage = req.session.successMessage;
   req.session.successMessage = null; 
+
   if (!userId) {
     res.redirect('/');
     return;
   }
-  db.all('SELECT * FROM budget WHERE userId = ?', [userId], (err, rows) => {
-      if (err) {
-          console.error(err.message);
-          res.status(500).send('An error occurred.');
-      } else {
-        
-          res.render('Budget.handlebars', { budgets: rows, userId  ,successMessage : successMessage});
+
+  const numberPerPage = 3; 
+  const page = req.query.page ? parseInt(req.query.page) : 1;
+
+  if (page < 1) {
+    res.redirect('/Budget');
+    return;
+  }
+
+  const offset = (page - 1) * numberPerPage;
+
+  db.get('SELECT COUNT(*) AS budgetCount FROM budget WHERE userId = ?', [userId], (err, result) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('An error occurred while fetching budget count.');
+    } else {
+      const budgetCount = result.budgetCount;
+      const lastPage = Math.ceil(budgetCount / numberPerPage);
+
+      
+      if (lastPage > 0 && page > lastPage) {
+       
+        const redirectToPageatleastone = Math.max(1, lastPage);
+        res.redirect(`/Budget?page=${redirectToPageatleastone}`);
+        return;
       }
+
+      const showPrevious = page > 1;
+      const showNext = page < lastPage;
+      const previousPage = page > 1 ? page - 1 : null;
+      const nextPage = page < lastPage ? page + 1 : null;
+
+      db.all('SELECT * FROM budget WHERE userId = ? LIMIT ? OFFSET ?', [userId, numberPerPage, offset], (err, budgets) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).send('An error occurred while fetching budgets.');
+        } else {
+          res.render('Budget.handlebars', {
+            budgets,
+            userId,
+            currentPage: page,
+            lastPage,
+            showPrevious: previousPage !== null,
+            showNext: nextPage !== null,
+            previousPage,
+            nextPage,
+            successMessage,
+          });
+        }
+      });
+    }
   });
 });
+
+
 
   
   app.post('/AddBudget', (req, res) => {
@@ -270,20 +316,71 @@ app.post('/editBudget/:id', (req, res) => {
 
 app.get('/Category', (req, res) => {
   const userId = req.session.userId;
-  const successMessage = req.session.successMessage
+  const successMessage = req.session.successMessage;
+
   if (!userId) {
     res.redirect('/');
     return;
   }
-  db.all('SELECT * FROM Categories WHERE userId = ?', [userId], (err, rows) => {
+
+  const numberPerPage = 3; 
+  const page = req.query.page ? parseInt(req.query.page) : 1;
+
+  if (page < 1) {
+    res.redirect('/Category');
+    return;
+  }
+
+  const offset = (page - 1) * numberPerPage;
+
+ 
+  db.get('SELECT COUNT(*) AS categoryCount FROM Categories WHERE userId = ?', [userId], (err, result) => {
     if (err) {
       console.error(err.message);
-      res.status(500).send('An error occurred.');
+      res.status(500).send('An error occurred while fetching category count.');
     } else {
-      res.render('Category.handlebars', { Categories: rows, userId, successMessage : successMessage });
+      const categoryCount = result.categoryCount;
+      const lastPage = Math.ceil(categoryCount / numberPerPage);
+
+      
+   
+      if (lastPage > 0 && page > lastPage) {
+       
+        const redirectToPageatleastone = Math.max(1, lastPage);
+        res.redirect(`/Category?page=${redirectToPageatleastone}`);
+        return;
+      }
+
+      const showPrevious = page > 1;
+      const showNext = page < lastPage;
+      const previousPage = page > 1 ? page - 1 : null;
+      const nextPage = page < lastPage ? page + 1 : null;
+
+     
+      db.all('SELECT * FROM Categories WHERE userId = ? LIMIT ? OFFSET ?', [userId, numberPerPage, offset], (err, categories) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).send('An error occurred while fetching categories.');
+        } else {
+          res.render('Category.handlebars', {
+            Categories: categories,
+            userId,
+            currentPage: page,
+            lastPage,
+            showPrevious: previousPage !== null,
+            showNext: nextPage !== null,
+            previousPage,
+            nextPage,
+            successMessage: successMessage,
+          });
+        }
+      });
     }
   });
 });
+
+
+
 
 
 app.post('/AddCategory', (req, res) => {
@@ -645,17 +742,13 @@ app.get('/admin', (req, res) => {
       res.status(500).send('An error occurred while fetching user data.');
     } else if (user) {
       if (user.isAdmin) {
-        // Fetch information about all users, their purchases, budgets, categories, and balances
-        db.all('SELECT u.*, b.budgetName, b.amount AS budgetAmount, c.CategoryName, p.PurchaseName, p.price, p.purchaseDate ' +
-               'FROM users u ' +
-               'LEFT JOIN budget b ON u.id = b.userId ' +
-               'LEFT JOIN Categories c ON u.id = c.userId ' +
-               'LEFT JOIN purchases p ON u.id = p.userId', (err, users) => {
+        // Fetch a list of all users
+        db.all('SELECT * FROM users', (err, users) => {
           if (err) {
             console.error(err.message);
             res.status(500).send('An error occurred while fetching user data.');
           } else {
-            res.render('admin.handlebars', { users });
+            res.render('admin.handlebars', { user, users });
           }
         });
       } else {
@@ -666,6 +759,8 @@ app.get('/admin', (req, res) => {
     }
   });
 });
+
+
 
 // // Edit user route
 // app.post('/admin/edit/:id', (req, res) => {

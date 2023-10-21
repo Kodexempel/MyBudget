@@ -798,13 +798,13 @@ footer.container {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.5);
     text-align: center;
     font-size: 18px;
     color: #ABB2BF;
 }
 
-/* Style the confirmation box */
+
 #confirmation-box {
     background :#282C34;
     padding: 20px;
@@ -813,12 +813,11 @@ footer.container {
     margin: 100px auto;
 }
 
-/* Style the confirmation text */
 #confirmation-text {
     margin-bottom: 20px;
 }
 
-/* Style the buttons */
+
 #confirmation-buttons {
     text-align: center;
 }
@@ -832,3 +831,45 @@ footer.container {
     color: #ABB2BF;
     background-color: #264653; 
 }
+
+/* my paging css */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    font-size: 16px;
+  }
+  
+
+  .pagination a {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #2A9D8F;
+    border: 1px solid #2A9D8F;
+    border-radius: 4px;
+    margin: 0 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .pagination a:hover {
+    background-color: #2A9D8F; 
+    color: #ABB2BF;
+  }
+  
+ 
+  .pagination span {
+    padding: 8px 12px;
+    background-color: #2A9D8F; 
+    color: #ABB2BF; 
+    border: 1px solid #ff9900;
+    border-radius: 4px;
+    margin: 0 4px;
+  }
+  
+
+  .pagination .disabled {
+    display: none;
+  }
+  
