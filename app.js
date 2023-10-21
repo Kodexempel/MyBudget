@@ -228,8 +228,8 @@ app.get('/Budget', (req, res) => {
         return;
       }
 
-      const showPrevious = page > 1;
-      const showNext = page < lastPage;
+      // const showPrevious = page > 1;
+      // const showNext = page < lastPage;
       const previousPage = page > 1 ? page - 1 : null;
       const nextPage = page < lastPage ? page + 1 : null;
 
@@ -351,8 +351,8 @@ app.get('/Category', (req, res) => {
         return;
       }
 
-      const showPrevious = page > 1;
-      const showNext = page < lastPage;
+      // const showPrevious = page > 1;
+      // const showNext = page < lastPage;
       const previousPage = page > 1 ? page - 1 : null;
       const nextPage = page < lastPage ? page + 1 : null;
 
@@ -742,7 +742,7 @@ app.get('/admin', (req, res) => {
       res.status(500).send('An error occurred while fetching user data.');
     } else if (user) {
       if (user.isAdmin) {
-        // Fetch a list of all users
+      
         db.all('SELECT * FROM users', (err, users) => {
           if (err) {
             console.error(err.message);
@@ -762,86 +762,47 @@ app.get('/admin', (req, res) => {
 
 
 
-// // Edit user route
-// app.post('/admin/edit/:id', (req, res) => {
-//   const userId = req.params.id;
+app.post('/admin/delete/user', (req, res) => {
+  const userIdToDelete = req.body.userId;
 
-//   // Fetch user data by ID (you can use a database query)
-//   db.get('SELECT * FROM users WHERE id = ?', [userId], (err, user) => {
-//       if (err) {
-//           console.error(err.message);
-//           res.status(500).send('An error occurred while fetching user data.');
-//           return;
-//       }
+  db.run('DELETE FROM users WHERE id = ?', userIdToDelete, (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('An error occurred while deleting the user account.');
+    } else {
+    
+      req.session.successMessage = 'User account deleted successfully!';
+      res.redirect('/admin');
+    }
+  });
+});
 
-//       if (!user) {
-//           res.status(404).send('User not found.');
-//           return;
-//       }
+app.post('/admin/edit/user', (req, res) => {
+  const { userId, email, username, isAdmin } = req.body;
 
-//       // Render an edit form with user data
-//       res.redirect('/admin', { user });
-//   });
-// });
-
-// Update user route
-// app.post('/admin/edit/:id', (req, res) => {
-//   const userId = req.params.id;
-//   const { email, username, isAdmin } = req.body;
-
-//   // Update the user's information in the database
-//   db.run('UPDATE users SET email = ?, username = ?, isAdmin = ? WHERE id = ?', [email, username, isAdmin, userId], (err) => {
-//       if (err) {
-//           console.error(err.message);
-//           res.status(500).send('An error occurred while updating user data.');
-//           return;
-//       }
-
-      
-//       res.redirect('/admin');
-//   });
-// });
-// Delete a user's purchases
-// app.post('/admin/delete/purchases/:userId', (req, res) => {
-//   const userId = req.params.userId;
-
-//   db.run('DELETE FROM purchases WHERE userId = ?', [userId], (err) => {
-//     if (err) {
-//       console.error(err.message);
-//       res.status(500).send('An error occurred while deleting the purchases.');
-//     } else {
-//       res.redirect('/admin');
-//     }
-//   });
-// });
-
-// Delete a user's categories
-// app.post('/admin/delete/categories/:userId', (req, res) => {
-//   const userId = req.params.userId;
-
-//   db.run('DELETE FROM categories WHERE userId = ?', [userId], (err) => {
-//     if (err) {
-//       console.error(err.message);
-//       res.status(500).send('An error occurred while deleting the categories.');
-//     } else {
-//       res.redirect('/admin');
-//     }
-//   });
-// });
-
-// // Delete a user's budgets
-// app.post('/admin/delete/budgets/:userId', (req, res) => {
-//   const userId = req.params.userId;
-
-//   db.run('DELETE FROM budget WHERE userId = ?', [userId], (err) => {
-//     if (err) {
-//       console.error(err.message);
-//       res.status(500).send('An error occurred while deleting the budgets.');
-//     } else {
-//       res.redirect('/admin');
-//     }
-//   });
-// });
+  db.run('UPDATE users SET email = ?, username = ?, isAdmin = ? WHERE id = ?', [email, username, isAdmin, userId], (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('An error occurred while updating user data.');
+    } else {
+   
+      req.session.successMessage = 'User information updated successfully!';
+      res.redirect('/admin');
+    }
+  });
+});
+app.get('/admin/logout', (req, res) => {
+  
+  req.session.destroy((err) => {
+      if (err) {
+          console.error('Error destroying session:', err.message);
+          res.status(500).send('An error occurred while logging out.');
+      } else {
+        
+          res.redirect('/');
+      }
+  });
+});
 
 
 app.use((req, res) => {

@@ -1,50 +1,90 @@
-<!-- Inside the admin.handlebars view -->
-<!-- Existing code for displaying user data -->
-<h1>Admin Panel</h1>
-<table>
-  <!-- Table header -->
-  <tr>
-    <th>User ID</th>
-    <th>Email</th>
-    <th>Username</th>
-    <th>Admin</th>
+<div id="main">
+<h2 class="admin-heading">Admin</h2>
+<a href="admin/logout" class="admin-logout">
 
-    {{!-- <th>Budget</th>
-    <th>Amount</th>
-    <th>Category</th>
-    <th>Purchase Name</th>
-    <th>Purchase Price</th>
-    <th>Purchase Date</th>
-    <th>Actions</th> --}}
-  </tr>
-  <!-- Loop through users -->
-  {{#each users}}
-  <tr>
-    <!-- User data -->
-    <td>{{id}}</td>
-    <td>{{email}}</td>
-    <td>{{userName}}</td>
-    <td>{{#if isAdmin}}Yes{{else}}No{{/if}}</td>
-   
-   
-    {{!-- <td>{{budgetName}}</td>
-    <td>{{budgetAmount}}</td>
-    <td>{{categoryName}}</td>
-    <td>{{PurchaseName}}</td>
-    <td>{{price}}</td>
-    <td>{{purchaseDate}}</td> --}}
-  
-    {{!-- <td>
-     
-      <button class="edit-btn" id="editBudgetButton{{id}}">Edit Budget</button>
-      <button class="edit-category-btn" id="editCategoryButton{{id}}">Edit Category</button>
-      
-    </td> --}}
-  </tr>
-  {{/each}}
+    <h2>Log out</h2>
+</a>
+
+        <div class="columns">
+             <div class="column  col-xs-12 col-sm-6 col-lg-3 and col-xs-12 col-sm-6 col-lg-6 left-container">
+<table class="admin">
+    <tr>
+        <th>User ID</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Admin</th>
+        
+    </tr>
+    {{#each users}}
+    <tr>
+        <td>{{id}}</td>
+        <td>{{email}}</td>
+        <td>{{userName}}</td>
+        <td>{{#if isAdmin}}Yes{{else}}No{{/if}}</td>
+       
+    </tr>
+    {{/each}}
 </table>
 
+<form action="/admin/edit/user" method="POST" class="common-form">
+
+<h2>Update User Info</h2>
+    <select name="userId">
+      <option value="">Select a user to Update</option>
+        {{#each users}}
+        <option value="{{this.id}}">{{this.email}} {{this.username}}</option>
+        {{/each}}
+    </select>
+    <input type="text" name="email" placeholder="New Email">
+    <input type="text" name="username" placeholder="New Username">
+    <input type="checkbox" name="isAdmin"> Admin
+    <button type="submit">Save</button>
+</form>
+
+<form action="/admin/delete/user" method="POST" id="delete-account-form" class="common-form">
+    <div class="form-group">
+        <h2>Delete users</h2>
+        <select name="userId" class="select-input">
+           <option value="">Select a user to delete</option>
+            {{#each users}}
+            <option value="{{this.id}}">{{this.email}} - {{this.username}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="form-group">
+        <button type="button" id="delete-account-button" class="text-button">Delete Account</button>
+    </div>
+</form>
+
+
+<div id="confirmation-dialog" style="display: none;">
+    <div id="confirmation-box">
+        <div id="confirmation-text">Are you sure you want to delete this user account? You will lose their information.</div>
+        <div id="confirmation-buttons">
+            <button id="confirm-button">Confirm</button>
+            <button id="cancel-button">Cancel</button>
+        </div>
+    </div>
+</div>
+</div>
+        </div>
+ </div>
+
 <script>
+    const deleteAccountButton = document.getElementById('delete-account-button');
+    const confirmationDialog = document.getElementById('confirmation-dialog');
+    const confirmButton = document.getElementById('confirm-button');
+    const cancelButton = document.getElementById('cancel-button');
+    
+    deleteAccountButton.addEventListener('click', function() {
+        confirmationDialog.style.display = 'block';
+    });
 
+    cancelButton.addEventListener('click', function() {
+        confirmationDialog.style.display = 'none';
+    });
 
-</script> 
+    confirmButton.addEventListener('click', function() {
+        document.getElementById('delete-account-form').submit();
+    });
+</script>

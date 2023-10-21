@@ -574,6 +574,7 @@ footer.container {
 /* ///////////////////////////////////////////////////////// my screen media */
 
   @media (max-width: 768px) {
+    
     #toggle-menu {
         font-size: 32px;
     }
@@ -873,3 +874,77 @@ footer.container {
     display: none;
   }
   
+  /* admin page  */
+
+.common-form {
+   
+    padding: 20px;
+    border-radius: 5px;
+  
+    margin: 20px 0;
+}
+
+.common-form select,
+.common-form input[type="text"],
+.common-form input[type="checkbox"] {
+    width: 50%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #ABB2BF;
+}
+
+.common-form input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+.common-form button[type="submit"],
+.common-form button#delete-account-button {
+    display: block;
+    width: 50%;
+    padding: 10px;
+    margin: 10px 0;
+    background: #264653;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#delete-account-button:hover {
+    background: #e76f51;
+}
+.admin{
+ color: #ABB2BF;
+}
+.admin-heading {
+    font-size: 28px; 
+    
+    margin: 20px 0; 
+}
+
+a.admin-logout {
+    position: fixed;
+    top: 30px;
+    right: 10px;
+    text-decoration: none;
+    background-color: #264653;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+a.admin-logout h2 {
+    margin: 0;
+    padding-left: 10px;
+    font-size: 16px; 
+    font-weight: bold;
+}
