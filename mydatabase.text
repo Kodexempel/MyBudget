@@ -1,6 +1,6 @@
 
 db.serialize(() => {
-  // Create the "users" table if it doesn't exist
+  
    db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, email TEXT, userName TEXT, password TEXT, balance REAL, isAdmin INTEGER)');
 
   // Insert data into the "users" table including the "balance" column
@@ -13,7 +13,7 @@ db.serialize(() => {
   db.run('INSERT INTO users (email, userName, password, balance, isAdmin) VALUES (?, ?, ?, ?, ?)', ['heeee@gmail.com', 'Jerome', '$2b$10$q3uPbkX5CZnO35W1WlgMRO3lCzQsorNKtmr0VuKZxXxM5wrii.X72', 200.0, 0]);
   
   
-  // Retrieve and display user data including the "balance" column
+  
  db.each('SELECT * FROM users', (err, row) => {
     if (err) {
       console.error(err.message);

@@ -17,6 +17,108 @@ app.use(session({
     saveUninitialized: false,
   }));
   
+// efter you run the project you have to remove the database table if you make changes //
+
+db.serialize(() => {
+  
+  db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, email TEXT, userName TEXT, password TEXT, balance REAL, isAdmin INTEGER)');
+
+ 
+ //'hashed password for 123 so you can log in '
+ db.run('INSERT INTO users (email, userName, password, balance, isAdmin) VALUES (?, ?, ?, ?, ?)', ['omer@gmail.com', 'Omer', '$2b$10$q3uPbkX5CZnO35W1WlgMRO3lCzQsorNKtmr0VuKZxXxM5wrii.X72', 100.0, 0]);
+ db.run('INSERT INTO users (email, userName, password, balance, isAdmin) VALUES (?, ?, ?, ?, ?)', ['hello@gmail.com', 'Jerome', '$2b$10$q3uPbkX5CZnO35W1WlgMRO3lCzQsorNKtmr0VuKZxXxM5wrii.X72',0, 1]);
+ db.run('INSERT INTO users (email, userName, password, balance, isAdmin) VALUES (?, ?, ?, ?, ?)', ['omereee@gmail.com', 'Omer', '$2b$10$q3uPbkX5CZnO35W1WlgMRO3lCzQsorNKtmr0VuKZxXxM5wrii.X72', 100.0, 0]);
+ db.run('INSERT INTO users (email, userName, password, balance, isAdmin) VALUES (?, ?, ?, ?, ?)', ['heleeelo@gmail.com', 'Jerome', '$2b$10$q3uPbkX5CZnO35W1WlgMRO3lCzQsorNKtmr0VuKZxXxM5wrii.X72', 200.0, 0]);
+ db.run('INSERT INTO users (email, userName, password, balance, isAdmin) VALUES (?, ?, ?, ?, ?)', ['omeeeer@gmail.com', 'Omer', '$2b$10$q3uPbkX5CZnO35W1WlgMRO3lCzQsorNKtmr0VuKZxXxM5wrii.X72', 100.0, 0]);
+ db.run('INSERT INTO users (email, userName, password, balance, isAdmin) VALUES (?, ?, ?, ?, ?)', ['heeee@gmail.com', 'Jerome', '$2b$10$q3uPbkX5CZnO35W1WlgMRO3lCzQsorNKtmr0VuKZxXxM5wrii.X72', 200.0, 0]);
+ 
+ 
+ 
+db.each('SELECT * FROM users', (err, row) => {
+   if (err) {
+     console.error(err.message);
+   } else {
+     console.log(`User ID: ${row.id}, Email: ${row.email}, User Name: ${row.userName}, Password: ${row.password}, Balance: ${row.balance}, isAdmin: ${row.isAdmin}`);
+   }
+ });
+});
+
+
+db.serialize(() => {
+
+ db.run('CREATE TABLE IF NOT EXISTS budget (id INTEGER PRIMARY KEY, budgetName TEXT, amount REAL, budgetDate DATE, userId INTEGER, FOREIGN KEY(userId) REFERENCES users(id))');
+
+ const currentDate = new Date().toISOString().split('T')[0];
+
+ const insertSampleData = db.prepare('INSERT INTO budget (budgetName, amount, budgetDate, userId) VALUES (?, ?, ?, ?)');
+
+
+ insertSampleData.run('Monthly Expenses', 2000.00, currentDate, 1);
+ insertSampleData.run('Groceries', 400.00, currentDate, 1);
+ insertSampleData.run('Entertainment', 300.00, currentDate, 1);
+ insertSampleData.run('Car', 300.00, currentDate, 1);
+ insertSampleData.run('home', 300.00, currentDate, 1);
+
+
+ insertSampleData.finalize();
+
+ db.each('SELECT * FROM budget', (err, row) => {
+     if (err) {
+         console.error(err.message);
+     } else {
+         console.log(`Budget Entry ID: ${row.id}, Name: ${row.budgetName}, Amount: $${row.amount}, Date: ${row.budgetDate}, User ID: ${row.userId}`);
+     }
+ });
+});
+
+db.serialize(() => {
+
+ db.run('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY, categoryName TEXT,userId INTEGER, FOREIGN KEY(userId) REFERENCES users(id))');
+
+
+ db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Food',1]);
+ db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Electronics',1]);
+ db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Clothing',1]);
+  db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['mat',1]);
+ db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['Electro',1]);
+ db.run('INSERT INTO categories (categoryName,userId) VALUES (?,?)', ['resturant',1]);
+
+ db.each('SELECT * FROM categories', (err, row) => {
+     if (err) {
+         console.error(err.message);
+     } else {
+         console.log(`Category ID: ${row.categoryId}, Name: ${row.categoryName},User ID: ${row.userId}`);
+     
+     }
+ });
+});
+
+
+db.serialize(() => {
+ db.run('CREATE TABLE IF NOT EXISTS purchases (id INTEGER PRIMARY KEY, PurchaseName TEXT, price REAL, categoryId INTEGER, budgetId INTEGER, purchaseDate DATE, userId INTEGER, FOREIGN KEY(categoryId) REFERENCES categories(id), FOREIGN KEY(budgetId) REFERENCES budget(id), FOREIGN KEY(userId) REFERENCES users(id))');
+
+ const currentDate = new Date().toISOString().split('T')[0];
+
+
+
+ 
+ db.run('INSERT INTO purchases (PurchaseName, price, categoryId, budgetId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', ['Item 1', 10.99, 1, 1, currentDate, 1]);
+ db.run('INSERT INTO purchases (PurchaseName, price, categoryId, budgetId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', ['Item 2', 19.95, 2, 2, currentDate, 1]);
+ db.run('INSERT INTO purchases (PurchaseName, price, categoryId, budgetId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', ['Item 3', 5.99, 1, 1, currentDate, 1]);
+ 
+ db.run('INSERT INTO purchases (PurchaseName, price, categoryId, budgetId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', ['Item 4', 10.99, 1, 1, currentDate, 1]);
+ db.run('INSERT INTO purchases (PurchaseName, price, categoryId, budgetId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', ['Item 5', 19.95, 2, 2, currentDate, 1]);
+ db.run('INSERT INTO purchases (PurchaseName, price, categoryId, budgetId, purchaseDate, userId) VALUES (?, ?, ?, ?, ?, ?)', ['Item 6', 5.99, 1, 1, currentDate, 1]);
+
+ db.each('SELECT purchases.id AS purchaseId, purchases.PurchaseName AS purchaseName, purchases.price AS purchasePrice, categories.id AS categoryId, categories.categoryName AS categoryName, purchases.budgetId AS budgetId, purchases.purchaseDate AS purchaseDate, purchases.userId AS userId FROM purchases INNER JOIN categories ON purchases.categoryId = categories.id', (err, row) => {
+     if (err) {
+         console.error(err.message);
+     } else {
+         console.log(`Purchase ID: ${row.purchaseId}, Name: ${row.purchaseName}, Price: $${row.purchasePrice}, Category ID: ${row.categoryId}, Category Name: ${row.categoryName}, Budget ID: ${row.budgetId}, Purchase Date: ${row.purchaseDate}, User ID: ${row.userId}`);
+     }
+ });
+});
+
 
 
   
